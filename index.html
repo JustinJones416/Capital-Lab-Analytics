@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>CapitalLab Analytics — Mesa de Análisis de Inversión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0a0e17; --bg2:#0e1420; --c1:#131a26; --c2:#18212f; --c3:#1f2a3a; --c4:#2a3850; --c5:#374863;
+  --t1:#eef3fb; --t2:#9fb0ca; --t3:#5f7491;
+  --accent:#00c4ff; --accent2:#2e9bff; --green:#00d084; --red:#ff4757; --amber:#ffb400; --gold:#e8b94a; --purple:#a78bfa;
+  --r:8px; --r2:12px; --r3:16px;
+  --font-head:'Syne',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'DM Mono',monospace;
+  --vh:1vh;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg);color:var(--t1);font-family:var(--font-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+body{min-height:100vh;background:radial-gradient(1200px 600px at 80% -10%, rgba(0,196,255,.06), transparent), radial-gradient(900px 500px at 0% 0%, rgba(167,139,250,.05), transparent), var(--bg);}
+a{color:var(--accent);text-decoration:none;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--c4);border-radius:6px;}
+::-webkit-scrollbar-thumb:hover{background:var(--c5);}
+
+/* ───── TOPBAR ───── */
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;padding:14px 22px;background:rgba(13,18,28,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--c3);}
+.brand{font-family:var(--font-head);font-weight:800;font-size:20px;letter-spacing:-.5px;display:flex;align-items:center;gap:9px;}
+.brand .dot{color:var(--accent);}
+.brand-sub{font-size:10px;color:var(--t3);font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;border-left:1px solid var(--c4);padding-left:12px;margin-left:2px;}
+.topbar-spacer{flex:1;}
+.topbar-tag{font-size:11px;color:var(--t2);font-family:var(--font-mono);display:flex;align-items:center;gap:6px;}
+.topbar-tag .live{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@media(max-width:560px){.topbar-tag{display:none;}.brand-sub{display:none;}}
+
+/* ───── LAYOUT ───── */
+.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 80px;}
+.stepbar{display:flex;align-items:center;gap:0;margin-bottom:28px;flex-wrap:wrap;}
+.step{display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:30px;font-size:13px;font-weight:600;color:var(--t3);background:var(--c1);border:1px solid var(--c3);transition:all .2s;}
+.step.active{color:var(--bg);background:var(--accent);border-color:var(--accent);}
+.step.done{color:var(--green);border-color:rgba(0,208,132,.4);}
+.step-num{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-family:var(--font-mono);background:rgba(255,255,255,.08);}
+.step.active .step-num{background:rgba(0,0,0,.18);}
+.step-conn{width:26px;height:2px;background:var(--c3);margin:0 4px;}
+@media(max-width:640px){.step span.lbl{display:none;}.step{padding:8px 12px;}.step-conn{width:14px;}}
+
+/* ───── HERO / SELECT MARKET ───── */
+.hero{text-align:center;padding:18px 0 8px;}
+.hero h1{font-family:var(--font-head);font-weight:800;font-size:34px;line-height:1.12;letter-spacing:-1px;margin-bottom:12px;}
+.hero h1 .hl{background:linear-gradient(120deg,var(--accent),var(--purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{color:var(--t2);font-size:15px;max-width:680px;margin:0 auto;}
+@media(max-width:640px){.hero h1{font-size:26px;}.hero p{font-size:14px;}}
+
+.section-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:30px 0 14px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--c4),transparent);}
+
+.market-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.market-card{position:relative;background:var(--c1);border:1px solid var(--c3);border-radius:var(--r2);padding:20px;cursor:pointer;transition:all .18s;overflow:hidden;}
+.market-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,196,255,.04));opacity:0;transition:opacity .18s;}
+.market-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.market-card:hover::before{opacity:1;}
+.market-card.sel{border-color:var(--accent);background:linear-gradient(135deg,var(--c1),rgba(0,196,255,.07));}
+.market-card .mc-icon{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-size:23px;margin-bottom:14px;}
+.market-card h3{font-family:var(--font-head);font-weight:700;font-size:17px;margin-bottom:5px;}
+.market-card p{font-size:12px;color:var(--t2);line-height:1.45;}
+.mc-tag{margin-top:12px;font-size:10px;font-family:var(--font-mono);color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
+
+/* ───── FORM ───── */
+.panel{background:var(--c1);border:1px solid var(--c3);border-radius:var(--r3);padding:24px;margin-bottom:18px;}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.panel-title{font-family:var(--font-head);font-weight:700;font-size:18px;display:flex;align-items:center;gap:10px;}
+.panel-title i{color:var(--accent);}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+.field label{display:block;font-size:12px;color:var(--t2);margin-bottom:6px;font-weight:500;}
+.field label .req{color:var(--accent);}
+.field label .hint{color:var(--t3);font-size:11px;font-weight:400;}
+.field input,.field select{width:100%;background:var(--bg2);border:1px solid var(--c4);border-radius:var(--r);padding:11px 13px;color:var(--t1);font-family:var(--font-mono);font-size:14px;transition:border-color .15s;}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);}
+.field input::placeholder{color:var(--t3);}
+.field .unit{position:relative;}
+.field .unit input{padding-right:42px;}
+.field .unit .u{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--t3);font-family:var(--font-mono);}
+.field-note{font-size:11px;color:var(--t3);margin-top:5px;line-height:1.45;display:flex;align-items:flex-start;gap:5px;}
+.field-note i{color:var(--accent);font-size:13px;margin-top:1px;flex-shrink:0;opacity:.8;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:var(--r);border:1px solid var(--c4);background:var(--c2);color:var(--t1);font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn:hover{border-color:var(--c5);background:var(--c3);}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#04121d;}
+.btn-primary:hover{background:#1ccdff;border-color:#1ccdff;}
+.btn-ghost{background:transparent;}
+.btn-lg{padding:14px 28px;font-size:15px;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;}
+
+/* ───── RESULTS ───── */
+.verdict{position:relative;border-radius:var(--r3);padding:28px;margin-bottom:20px;overflow:hidden;border:1px solid var(--c3);background:var(--c1);}
+.verdict-grade{font-family:var(--font-head);font-weight:800;font-size:42px;line-height:1;letter-spacing:-1px;}
+.verdict-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.verdict-ring{position:relative;width:120px;height:120px;flex-shrink:0;}
+.verdict-info{flex:1;min-width:200px;}
+.verdict-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin-bottom:6px;}
+.verdict-title{font-family:var(--font-head);font-weight:800;font-size:26px;margin-bottom:8px;}
+.verdict-desc{font-size:14px;color:var(--t2);line-height:1.55;max-width:560px;}
+.verdict-score{font-family:var(--font-mono);font-size:13px;color:var(--t2);margin-top:10px;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{background:var(--c1);border:1px solid var(--c3);border-radius:var(--r2);padding:15px 16px;}
+.kpi-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.kpi-val{font-family:var(--font-mono);font-size:21px;font-weight:500;line-height:1;}
+.kpi-sub{font-size:11px;color:var(--t3);margin-top:6px;}
+.g{color:var(--green);} .r{color:var(--red);} .a{color:var(--amber);} .b{color:var(--accent);} .pu{color:var(--purple);}
+
+/* Formula cards */
+.formula-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.fchip{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--c2);border:1px solid var(--c4);color:var(--t2);cursor:pointer;transition:all .15s;}
+.fchip:hover{border-color:var(--accent);color:var(--t1);}
+.fchip.active{background:var(--accent);border-color:var(--accent);color:#04121d;font-weight:600;}
+.formula-list{display:flex;flex-direction:column;gap:12px;}
+.formula{background:var(--c1);border:1px solid var(--c3);border-radius:var(--r2);padding:18px;border-left:3px solid var(--accent);}
+.formula-name{font-family:var(--font-head);font-weight:700;font-size:15px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.formula-cat{font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:10px;background:var(--c3);color:var(--t2);}
+.formula-eq{font-family:var(--font-mono);font-size:14px;color:var(--accent);background:var(--bg2);padding:10px 13px;border-radius:var(--r);margin:9px 0;overflow-x:auto;white-space:nowrap;}
+.formula-result{display:flex;align-items:baseline;gap:10px;margin-top:8px;}
+.formula-result .rv{font-family:var(--font-mono);font-size:20px;font-weight:500;color:var(--t1);}
+.formula-result .rl{font-size:12px;color:var(--t3);}
+.formula-desc{font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:8px;}
+.formula-interp{font-size:12.5px;line-height:1.5;margin-top:9px;padding:9px 12px;border-radius:var(--r);background:var(--bg2);border-left:2px solid var(--c5);}
+
+.card{background:var(--c1);border:1px solid var(--c3);border-radius:var(--r3);padding:22px;margin-bottom:18px;}
+.card-title{font-family:var(--font-head);font-weight:700;font-size:17px;margin-bottom:6px;display:flex;align-items:center;gap:9px;}
+.card-title i{color:var(--accent);}
+.card-sub{font-size:12.5px;color:var(--t2);margin-bottom:16px;line-height:1.5;}
+
+.chart-box{position:relative;height:300px;}
+@media(max-width:640px){.chart-box{height:240px;}}
+
+/* Risk factor bars */
+.riskfactors{display:flex;flex-direction:column;gap:14px;}
+.rf{}
+.rf-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px;}
+.rf-name{font-weight:500;display:flex;align-items:center;gap:7px;}
+.rf-val{font-family:var(--font-mono);font-size:13px;color:var(--t2);}
+.rf-track{height:9px;border-radius:6px;background:var(--c2);overflow:hidden;position:relative;}
+.rf-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.rf-desc{font-size:11.5px;color:var(--t3);margin-top:5px;line-height:1.4;}
+
+.info-box{font-size:13px;line-height:1.55;padding:13px 15px;border-radius:var(--r2);background:var(--bg2);border-left:3px solid var(--accent);color:var(--t2);margin:6px 0;}
+.info-box.warn{border-left-color:var(--amber);}
+.info-box.danger{border-left-color:var(--red);}
+.info-box.success{border-left-color:var(--green);}
+.info-box b{color:var(--t1);}
+
+.disclaimer{font-size:11.5px;color:var(--t3);line-height:1.5;padding:14px 16px;border-radius:var(--r2);border:1px dashed var(--c4);margin-top:22px;}
+
+table.data{width:100%;border-collapse:collapse;font-size:13px;}
+table.data th{text-align:left;padding:9px 11px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);border-bottom:1px solid var(--c3);}
+table.data td{padding:9px 11px;border-bottom:1px solid var(--c2);font-family:var(--font-mono);}
+table.data tr:last-child td{border-bottom:none;}
+.tbl-scroll{overflow-x:auto;}
+
+.hidden{display:none!important;}
+.fade-in{animation:fadeIn .4s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--c3);border:1px solid var(--c5);border-radius:var(--r2);padding:13px 20px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:all .3s;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.err{border-color:var(--red);}
+.toast.ok{border-color:var(--green);}
+
+.foot{text-align:center;padding:30px 20px;color:var(--t3);font-size:12px;border-top:1px solid var(--c2);margin-top:40px;}
+.foot b{color:var(--t2);}
+
+/* audience toggle */
+.aud-toggle{display:inline-flex;background:var(--c2);border:1px solid var(--c4);border-radius:30px;padding:3px;gap:2px;}
+.aud-toggle button{padding:6px 14px;border-radius:30px;border:none;background:transparent;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all .15s;}
+.aud-toggle button.active{background:var(--accent);color:#04121d;}
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">CapitalLab<span class="dot">.</span>Analytics <span class="brand-sub">Mesa de Análisis</span></div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-tag"><span class="live"></span> Motor de análisis activo</div>
+</div>
+
+<div class="wrap">
+
+  <!-- Stepbar -->
+  <div class="stepbar" id="stepbar">
+    <div class="step active" id="st1"><span class="step-num">1</span><span class="lbl">Mercado</span></div>
+    <div class="step-conn"></div>
+    <div class="step" id="st2"><span class="step-num">2</span><span class="lbl">Datos del activo</span></div>
+    <div class="step-conn"></div>
+    <div class="step" id="st3"><span class="step-num">3</span><span class="lbl">Análisis y veredicto</span></div>
+  </div>
+
+  <!-- ░░░ PASO 1: SELECCIÓN DE MERCADO ░░░ -->
+  <section id="page-market" class="fade-in">
+    <div class="hero">
+      <h1>Decide con <span class="hl">rigor</span>, no con intuición</h1>
+      <p>Ingresa los datos reales de un activo y la mesa de análisis calcula las métricas financieras relevantes, simula miles de escenarios y mide el riesgo real para decirte si la inversión vale la pena.</p>
+    </div>
+
+    <div class="section-label">Elige el tipo de activo a analizar</div>
+    <div class="market-grid" id="market-grid"></div>
+
+    <div class="info-box" style="margin-top:24px;">
+      <b>¿Cómo funciona?</b> Selecciona un mercado, ingresa los datos del activo (puedes cargar un ejemplo para ver el formato), y obtén un informe completo con fórmulas, simulación Monte Carlo, medición de riesgo y una recomendación fundamentada. La herramienta está diseñada para datos reales de mercado.
+    </div>
+  </section>
+
+  <!-- ░░░ PASO 2: FORMULARIO DE DATOS ░░░ -->
+  <section id="page-form" class="hidden">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><i id="form-icon" class="ti ti-chart-line"></i> <span id="form-title">Datos del activo</span></div>
+        <div class="btn-row" style="margin-top:0;">
+          <button class="btn btn-ghost" onclick="loadExample()"><i class="ti ti-flask"></i> Cargar ejemplo</button>
+          <button class="btn btn-ghost" onclick="goToMarket()"><i class="ti ti-arrow-left"></i> Cambiar mercado</button>
+        </div>
+      </div>
+      <p class="card-sub" id="form-desc"></p>
+      <div class="form-grid" id="form-fields"></div>
+      <div class="btn-row" style="margin-top:22px;">
+        <button class="btn btn-primary btn-lg" onclick="runAnalysis()"><i class="ti ti-calculator"></i> Ejecutar análisis</button>
+      </div>
+    </div>
+    <div class="info-box warn">
+      <b>Sobre los datos:</b> ingresa información real obtenida de fuentes confiables. Debajo de cada campo encontrarás <b>dónde ubicar el dato</b> (estados financieros, portales de mercado, bancos centrales). La calidad del análisis depende directamente de la calidad de los datos ingresados.
+    </div>
+  </section>
+
+  <!-- ░░░ PASO 3: RESULTADOS ░░░ -->
+  <section id="page-results" class="hidden">
+
+    <div class="panel-head" style="margin-bottom:18px;">
+      <div class="panel-title"><i class="ti ti-report-analytics"></i> <span id="result-asset-name">Análisis</span></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <div class="aud-toggle" id="aud-toggle">
+          <button data-aud="simple" onclick="setAudience('simple')">Explicación sencilla</button>
+          <button data-aud="expert" class="active" onclick="setAudience('expert')">Vista experta</button>
+        </div>
+        <button class="btn btn-ghost" onclick="goToForm()"><i class="ti ti-pencil"></i> Editar datos</button>
+      </div>
+    </div>
+
+    <!-- Veredicto -->
+    <div class="verdict" id="verdict-box"></div>
+
+    <!-- KPIs -->
+    <div class="section-label">Indicadores clave</div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+
+    <!-- Riesgo por factores -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-shield-half"></i> Medición de riesgo por factores</div>
+      <div class="card-sub">Cada factor se evalúa de 0 (favorable) a 100 (desfavorable). El puntaje global combina todos los factores ponderados según el tipo de activo.</div>
+      <div class="riskfactors" id="risk-factors"></div>
+    </div>
+
+    <!-- Monte Carlo -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-histogram"></i> Simulación Monte Carlo</div>
+      <div class="card-sub" id="mc-sub">Proyección de <span id="mc-n">10,000</span> escenarios posibles del valor del activo en el horizonte definido, según su rentabilidad y volatilidad esperadas.</div>
+      <div class="chart-box"><canvas id="mc-chart"></canvas></div>
+      <div class="kpi-grid" id="mc-kpis" style="margin-top:18px;margin-bottom:0;"></div>
+    </div>
+
+    <!-- Pruebas / escenarios -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-test-pipe"></i> Pruebas de estrés y escenarios</div>
+      <div class="card-sub">Cómo se comportaría la inversión bajo condiciones adversas y favorables.</div>
+      <div class="tbl-scroll"><table class="data" id="stress-table"></table></div>
+    </div>
+
+    <!-- Fórmulas -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-math-function"></i> Fórmulas financieras</div>
+      <div class="card-sub">Todas las fórmulas aplicadas en el análisis, con su cálculo paso a paso. Filtra por categoría.</div>
+      <div class="formula-toolbar" id="formula-toolbar"></div>
+      <div class="formula-list" id="formula-list"></div>
+    </div>
+
+    <div class="disclaimer" id="disclaimer">
+      <b>Aviso:</b> Esta herramienta es de carácter educativo y de apoyo al análisis. Los resultados se basan exclusivamente en los datos ingresados y en supuestos de modelos financieros estándar. No constituye asesoría de inversión ni garantiza resultados futuros. Toda decisión de inversión debe complementarse con análisis adicional y, cuando corresponda, con la consulta a un asesor financiero certificado.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goToMarket()"><i class="ti ti-refresh"></i> Analizar otro activo</button>
+      <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> Exportar / Imprimir</button>
+    </div>
+  </section>
+
+</div>
+
+<div class="foot">
+  <b>CapitalLab Analytics</b> — Mesa de Análisis de Inversión · Herramienta educativa de apoyo financiero<br>
+  Universidad de Panamá · Facultad de Economía · 2026
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CapitalLab Analytics — Motor de análisis de inversión
+// ══════════════════════════════════════════════════════════════
+'use strict';
+
+// iOS viewport fix
+function setVH(){ document.documentElement.style.setProperty('--vh', (window.innerHeight*0.01)+'px'); }
+setVH(); window.addEventListener('resize', setVH);
+
+// ───── Estado global ─────
+let currentMarket = null;   // 'accion' | 'bono' | 'divisa' | 'futuro' | 'derivado'
+let lastResult = null;      // resultado del último análisis
+let audience = 'expert';    // 'simple' | 'expert'
+let mcChart = null;
+
+// ───── Definición de mercados ─────
+const MARKETS = {
+  accion: {
+    name:'Acciones', icon:'ti-trending-up', color:'#2962ff',
+    desc:'Renta variable. Analiza una acción a partir de su precio, fundamentales y volatilidad.',
+    formDesc:'Ingresa los datos de la acción. Los campos marcados con * son indispensables; los demás enriquecen el análisis fundamental.',
+    fields:[
+      {k:'ticker', label:'Símbolo / Nombre', type:'text', req:true, placeholder:'Ej. AAPL', ex:'AAPL', src:'Símbolo bursátil de la empresa (ticker).'},
+      {k:'price', label:'Precio actual', type:'num', req:true, unit:'$', placeholder:'185.00', ex:185, src:'Cotización en tiempo real: Yahoo Finanzas, Google Finanzas, Investing.com o tu bróker.'},
+      {k:'shares', label:'Acciones en circulación', type:'num', unit:'mill.', placeholder:'15500', ex:15500, note:'En millones', src:'Estados financieros de la empresa o ficha "Statistics" en Yahoo Finanzas.'},
+      {k:'eps', label:'Utilidad por acción (EPS)', type:'num', unit:'$', placeholder:'6.13', ex:6.13, src:'Estado de resultados anual (EPS diluido) o ficha de la acción en Yahoo Finanzas.'},
+      {k:'bookValue', label:'Valor en libros por acción', type:'num', unit:'$', placeholder:'4.40', ex:4.40, src:'Patrimonio neto ÷ acciones en circulación (balance general). En Yahoo: "Book Value Per Share".'},
+      {k:'dividend', label:'Dividendo anual por acción', type:'num', unit:'$', placeholder:'0.96', ex:0.96, src:'Sección de dividendos de la empresa o ficha "Dividend" en Yahoo Finanzas. Cero si no reparte.'},
+      {k:'epsGrowth', label:'Crecimiento esperado de utilidades', type:'num', unit:'%', placeholder:'10', ex:10, note:'Anual estimado', src:'Estimación propia o consenso de analistas ("Growth Estimates" en Yahoo Finanzas).'},
+      {k:'beta', label:'Beta', type:'num', placeholder:'1.25', ex:1.25, note:'Sensibilidad al mercado', src:'Ficha de la acción en Yahoo Finanzas o Investing.com (campo "Beta").'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', unit:'%', req:true, placeholder:'28', ex:28, src:'Desviación estándar anualizada de los retornos. Aproximación: volatilidad implícita de opciones o el dato histórico en Investing.com / portales de análisis técnico.'},
+      {k:'expReturn', label:'Rentabilidad esperada anual', type:'num', unit:'%', req:true, placeholder:'12', ex:12, src:'Estimación propia según análisis fundamental, o precio objetivo de analistas respecto al precio actual.'},
+      {k:'debtEquity', label:'Razón Deuda/Patrimonio', type:'num', placeholder:'1.45', ex:1.45, src:'Balance general (pasivo total ÷ patrimonio) o ficha "Debt/Equity" en Yahoo Finanzas.'},
+      {k:'roe', label:'Rentabilidad sobre patrimonio (ROE)', type:'num', unit:'%', placeholder:'18', ex:18, src:'Ficha "Return on Equity" en Yahoo Finanzas o cálculo: utilidad neta ÷ patrimonio.'},
+    ]
+  },
+  bono: {
+    name:'Bonos', icon:'ti-building-bank', color:'#00d084',
+    desc:'Renta fija. Evalúa un bono soberano o corporativo por su cupón, rendimiento y sensibilidad a tasas.',
+    formDesc:'Ingresa las características del bono. El precio se expresa como porcentaje del valor nominal (par = 100).',
+    fields:[
+      {k:'ticker', label:'Nombre / Emisor', type:'text', req:true, placeholder:'Ej. Bono UST 10Y', ex:'UST 10Y', src:'Nombre del bono y su emisor (gobierno o empresa).'},
+      {k:'faceValue', label:'Valor nominal', type:'num', req:true, unit:'$', placeholder:'1000', ex:1000, src:'Prospecto de emisión del bono. Suele ser 1,000 o 100 por unidad.'},
+      {k:'price', label:'Precio actual (% del par)', type:'num', req:true, unit:'%', placeholder:'98.5', ex:98.5, src:'Cotización en plataformas de renta fija, tu bróker o portales como Investing.com (sección bonos).'},
+      {k:'coupon', label:'Tasa cupón anual', type:'num', req:true, unit:'%', placeholder:'4.5', ex:4.5, src:'Prospecto de emisión del bono (tasa de interés nominal que paga).'},
+      {k:'couponFreq', label:'Pagos por año', type:'select', options:[['2','Semestral (2)'],['1','Anual (1)'],['4','Trimestral (4)']], ex:'2', src:'Prospecto del bono. Los bonos del Tesoro de EE.UU. pagan semestralmente.'},
+      {k:'maturity', label:'Años al vencimiento', type:'num', req:true, unit:'años', placeholder:'10', ex:10, src:'Diferencia entre la fecha de vencimiento (en el prospecto) y la fecha actual.'},
+      {k:'marketRate', label:'Tasa de mercado / requerida', type:'num', req:true, unit:'%', placeholder:'4.8', ex:4.8, note:'Rendimiento exigido por el mercado', src:'Rendimiento de bonos comparables (mismo plazo y riesgo). Curva de tasas en Investing.com o sitios de bancos centrales.'},
+      {k:'rating', label:'Calificación crediticia', type:'select', options:[['AAA','AAA'],['AA','AA'],['A','A'],['BBB','BBB'],['BB','BB'],['B','B'],['CCC','CCC o inferior']], ex:'AA', src:'Agencias calificadoras: Moody\u2019s, S&P o Fitch (publicadas en sus sitios y en el prospecto).'},
+      {k:'inflation', label:'Inflación esperada', type:'num', unit:'%', placeholder:'3.0', ex:3.0, note:'Para rendimiento real', src:'Proyecciones del banco central del país emisor o de organismos como el FMI.'},
+    ]
+  },
+  divisa: {
+    name:'Divisas (Forex)', icon:'ti-currency-dollar', color:'#ffb400',
+    desc:'Mercado cambiario. Analiza un par de divisas con su tipo de cambio, diferencial de tasas y datos macro.',
+    formDesc:'Ingresa los datos del par de divisas (base/cotizada). El diferencial de tasas es clave para el análisis de carry.',
+    fields:[
+      {k:'ticker', label:'Par de divisas', type:'text', req:true, placeholder:'Ej. EUR/USD', ex:'EUR/USD', src:'Formato base/cotizada. La primera divisa es la base, la segunda la cotizada.'},
+      {k:'price', label:'Tipo de cambio actual', type:'num', req:true, placeholder:'1.0850', ex:1.0850, src:'Cotización en tiempo real: Investing.com, XE.com, Yahoo Finanzas o tu bróker de forex.'},
+      {k:'rateBase', label:'Tasa de interés (divisa base)', type:'num', req:true, unit:'%', placeholder:'4.50', ex:4.50, src:'Tasa de política del banco central de la divisa base (ej. BCE para el euro). Ver sitio del banco central o tradingeconomics.com.'},
+      {k:'rateQuote', label:'Tasa de interés (divisa cotizada)', type:'num', req:true, unit:'%', placeholder:'5.50', ex:5.50, src:'Tasa de política del banco central de la divisa cotizada (ej. Reserva Federal para el dólar).'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'9', ex:9, src:'Volatilidad histórica del par en portales de análisis técnico (Investing.com) o volatilidad implícita de opciones de divisa.'},
+      {k:'inflationBase', label:'Inflación país base', type:'num', unit:'%', placeholder:'2.6', ex:2.6, src:'Instituto de estadística o banco central del país base. Comparativos en tradingeconomics.com.'},
+      {k:'inflationQuote', label:'Inflación país cotizado', type:'num', unit:'%', placeholder:'3.1', ex:3.1, src:'Instituto de estadística o banco central del país cotizado.'},
+      {k:'horizon', label:'Horizonte de análisis', type:'num', unit:'meses', placeholder:'12', ex:12, src:'Lo defines tú según tu objetivo de inversión.'},
+      {k:'expReturn', label:'Apreciación esperada', type:'num', unit:'%', placeholder:'2', ex:2, note:'Del par, anual', src:'Estimación propia o consenso de analistas sobre la dirección del par.'},
+    ]
+  },
+  futuro: {
+    name:'Futuros', icon:'ti-chart-candle', color:'#ff4757',
+    desc:'Contratos de futuros sobre materias primas, índices o activos. Evalúa base, apalancamiento y curva.',
+    formDesc:'Ingresa los datos del contrato de futuros. El tamaño del contrato y el margen determinan el apalancamiento.',
+    fields:[
+      {k:'ticker', label:'Contrato', type:'text', req:true, placeholder:'Ej. CL (Petróleo WTI)', ex:'CL WTI', src:'Símbolo del contrato de futuros (ej. CL = petróleo WTI, GC = oro, ES = S&P 500).'},
+      {k:'price', label:'Precio del futuro', type:'num', req:true, unit:'$', placeholder:'78.50', ex:78.50, src:'Cotización del contrato en CME Group, Investing.com o tu bróker de futuros.'},
+      {k:'spot', label:'Precio spot (contado)', type:'num', req:true, unit:'$', placeholder:'77.20', ex:77.20, src:'Precio al contado del subyacente (ej. precio actual del petróleo) en portales de materias primas.'},
+      {k:'contractSize', label:'Tamaño del contrato', type:'num', req:true, unit:'unid.', placeholder:'1000', ex:1000, note:'Unidades del subyacente', src:'Especificaciones del contrato en el sitio de la bolsa (ej. CME Group). El petróleo WTI = 1,000 barriles.'},
+      {k:'margin', label:'Margen inicial requerido', type:'num', req:true, unit:'$', placeholder:'6500', ex:6500, src:'Especificaciones de margen de la bolsa (CME) o tu bróker de futuros.'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'33', ex:33, src:'Volatilidad histórica del subyacente o índice de volatilidad asociado (ej. OVX para el petróleo).'},
+      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'90', ex:90, src:'Diferencia entre la fecha de vencimiento del contrato (en las especificaciones) y hoy.'},
+      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', unit:'%', placeholder:'5.0', ex:5.0, src:'Rendimiento de las letras del Tesoro de EE.UU. a corto plazo (T-bills), en Investing.com o la Fed.'},
+      {k:'storageCost', label:'Costo de almacenamiento/acarreo', type:'num', unit:'%', placeholder:'1.5', ex:1.5, note:'Anual, si aplica', src:'Estimación según el tipo de materia prima (relevante en commodities físicas). Cero para índices financieros.'},
+      {k:'expReturn', label:'Movimiento esperado', type:'num', unit:'%', placeholder:'5', ex:5, note:'Del subyacente, anual', src:'Estimación propia sobre la dirección del subyacente.'},
+    ]
+  },
+  derivado: {
+    name:'Derivados (Opciones)', icon:'ti-diamonds', color:'#a78bfa',
+    desc:'Opciones financieras. Valora una opción con el modelo Black-Scholes y analiza sus sensibilidades (griegas).',
+    formDesc:'Ingresa los datos de la opción. Con ellos se calcula su valor teórico (Black-Scholes) y las griegas.',
+    fields:[
+      {k:'ticker', label:'Opción (subyacente)', type:'text', req:true, placeholder:'Ej. AAPL Call', ex:'AAPL Call', src:'Subyacente y tipo de opción (ej. "AAPL Call 190").'},
+      {k:'optType', label:'Tipo de opción', type:'select', req:true, options:[['call','Call (compra)'],['put','Put (venta)']], ex:'call', src:'Call = derecho a comprar; Put = derecho a vender. Lo define el contrato.'},
+      {k:'spot', label:'Precio del subyacente (S)', type:'num', req:true, unit:'$', placeholder:'185', ex:185, src:'Precio actual de la acción o activo subyacente (Yahoo Finanzas, tu bróker).'},
+      {k:'strike', label:'Precio de ejercicio (K)', type:'num', req:true, unit:'$', placeholder:'190', ex:190, src:'Cadena de opciones (option chain) del subyacente en tu bróker o Yahoo Finanzas (pestaña "Options").'},
+      {k:'price', label:'Prima de mercado (opcional)', type:'num', unit:'$', placeholder:'8.45', ex:8.45, note:'Para comparar con el valor teórico', src:'Precio de la opción en la cadena de opciones (columna "Last" o "Bid/Ask").'},
+      {k:'volatility', label:'Volatilidad implícita', type:'num', req:true, unit:'%', placeholder:'28', ex:28, src:'Columna "Implied Volatility (IV)" en la cadena de opciones de tu bróker o Yahoo Finanzas.'},
+      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'60', ex:60, src:'Diferencia entre la fecha de expiración de la opción y hoy.'},
+      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', req:true, unit:'%', placeholder:'5.0', ex:5.0, src:'Rendimiento de letras del Tesoro de EE.UU. a corto plazo (T-bills), en Investing.com o la Fed.'},
+      {k:'dividend', label:'Rendimiento por dividendos', type:'num', unit:'%', placeholder:'0.5', ex:0.5, note:'Del subyacente, anual', src:'Dividend yield del subyacente en Yahoo Finanzas. Cero si no reparte dividendos.'},
+    ]
+  },
+};
+
+// ───── Utilidades ─────
+const $ = id => document.getElementById(id);
+function fmt(n, d=2){ if(n===null||n===undefined||isNaN(n)) return '—'; return Number(n).toLocaleString('es-PA',{minimumFractionDigits:d, maximumFractionDigits:d}); }
+function fmtMoney(n, d=2){ return '$'+fmt(n,d); }
+function fmtPct(n, d=2){ if(n===null||isNaN(n)) return '—'; return fmt(n,d)+'%'; }
+function toast(msg, type=''){ const t=$('toast'); t.textContent=msg; t.className='toast show '+type; clearTimeout(t._t); t._t=setTimeout(()=>t.className='toast',2600); }
+
+// ───── Navegación ─────
+function show(page){
+  ['page-market','page-form','page-results'].forEach(p=>$(p).classList.add('hidden'));
+  $(page).classList.remove('hidden');
+  $(page).classList.add('fade-in');
+  setTimeout(()=>$(page).classList.remove('fade-in'),400);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setStep(n){
+  [1,2,3].forEach(i=>{
+    const el=$('st'+i);
+    el.classList.remove('active','done');
+    if(i<n) el.classList.add('done');
+    else if(i===n) el.classList.add('active');
+  });
+}
+function goToMarket(){ currentMarket=null; show('page-market'); setStep(1); }
+function goToForm(){ show('page-form'); setStep(2); }
+
+// ───── Render selección de mercado ─────
+function renderMarkets(){
+  $('market-grid').innerHTML = Object.entries(MARKETS).map(([key,m])=>`
+    <div class="market-card" onclick="selectMarket('${key}')">
+      <div class="mc-icon" style="background:${m.color}22;color:${m.color};"><i class="ti ${m.icon}"></i></div>
+      <h3>${m.name}</h3>
+      <p>${m.desc}</p>
+      <div class="mc-tag">Analizar →</div>
+    </div>
+  `).join('');
+}
+
+function selectMarket(key){
+  currentMarket = key;
+  const m = MARKETS[key];
+  $('form-title').textContent = 'Datos · '+m.name;
+  $('form-icon').className = 'ti '+m.icon;
+  $('form-desc').textContent = m.formDesc;
+  renderForm();
+  show('page-form');
+  setStep(2);
+}
+
+function renderForm(){
+  const m = MARKETS[currentMarket];
+  $('form-fields').innerHTML = m.fields.map(f=>{
+    const reqMark = f.req ? '<span class="req">*</span>' : '';
+    const hint = f.note ? `<span class="hint"> · ${f.note}</span>` : '';
+    const src = f.src ? `<div class="field-note"><i class="ti ti-map-pin"></i> ${f.src}</div>` : '';
+    if(f.type==='select'){
+      return `<div class="field">
+        <label>${f.label} ${reqMark}${hint}</label>
+        <select id="f-${f.k}">${f.options.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+        ${src}
+      </div>`;
+    }
+    const unit = f.unit ? `<span class="u">${f.unit}</span>` : '';
+    const inputType = f.type==='num' ? 'number' : 'text';
+    const step = f.type==='num' ? ' step="any"' : '';
+    return `<div class="field">
+      <label>${f.label} ${reqMark}${hint}</label>
+      <div class="unit"><input id="f-${f.k}" type="${inputType}"${step} placeholder="${f.placeholder||''}">${unit}</div>
+      ${src}
+    </div>`;
+  }).join('');
+}
+
+function loadExample(){
+  const m = MARKETS[currentMarket];
+  m.fields.forEach(f=>{
+    if(f.ex!==undefined){ const el=$('f-'+f.k); if(el) el.value=f.ex; }
+  });
+  toast('Datos de ejemplo cargados — reemplázalos con valores reales','ok');
+}
+
+// ───── Recolección de datos del formulario ─────
+function collectData(){
+  const m = MARKETS[currentMarket];
+  const data = {};
+  const missing = [];
+  m.fields.forEach(f=>{
+    const el = $('f-'+f.k);
+    let v = el ? el.value.trim() : '';
+    if(f.type==='num'){
+      v = v===''? null : parseFloat(v);
+      if(f.req && (v===null || isNaN(v))) missing.push(f.label);
+    } else {
+      if(f.req && !v) missing.push(f.label);
+    }
+    data[f.k] = v;
+  });
+  return { data, missing };
+}
+
+// ══════════════════════════════════════════════════════════════
+// MOTOR DE CÁLCULO FINANCIERO POR MERCADO
+// Cada analizador devuelve: { kpis[], formulas[], riskFactors[],
+//   mc:{mean,sigma,expReturnAnnual,horizonYears}, stress[], verdictInputs{} }
+// ══════════════════════════════════════════════════════════════
+
+// Distribución normal acumulada (para Black-Scholes y VaR)
+function normCDF(x){
+  const t = 1/(1+0.2316419*Math.abs(x));
+  const d = 0.3989423*Math.exp(-x*x/2);
+  let p = d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));
+  return x>0 ? 1-p : p;
+}
+function normPDF(x){ return 0.3989422804*Math.exp(-x*x/2); }
+
+// helper para fórmulas
+function F(name, cat, eq, value, valLabel, desc, interp){
+  return { name, cat, eq, value, valLabel, desc, interp };
+}
+function RF(name, score, desc){ return { name, score:Math.max(0,Math.min(100,score)), desc }; }
+
+// ───────────────────────────────────────────────
+// ACCIONES
+// ───────────────────────────────────────────────
+function analyzeAccion(d){
+  const price=d.price, eps=d.eps, bv=d.bookValue, div=d.dividend||0;
+  const g=(d.epsGrowth||0)/100, beta=d.beta!=null?d.beta:1, vol=d.volatility, er=d.expReturn;
+  const formulas=[], kpis=[];
+
+  // Ratios de valoración
+  const per = eps>0 ? price/eps : null;
+  if(per!=null) formulas.push(F('Razón Precio/Utilidad (P/E)','Valoración','P/E = Precio / EPS', per, 'veces',
+    'Cuántas veces la utilidad anual por acción está contenida en el precio.',
+    per<15?'Un P/E relativamente bajo puede indicar que la acción está atractivamente valorada o que el mercado espera bajo crecimiento.':per<25?'Un P/E moderado, en rango típico del mercado.':'Un P/E elevado: el mercado paga una prima, usualmente por expectativas de alto crecimiento. Mayor riesgo si el crecimiento no se materializa.'));
+
+  const pb = bv>0 ? price/bv : null;
+  if(pb!=null) formulas.push(F('Razón Precio/Valor Libro (P/B)','Valoración','P/B = Precio / Valor en libros', pb, 'veces',
+    'Relación entre el precio de mercado y el valor contable por acción.',
+    pb<1?'Cotiza por debajo de su valor en libros, lo que puede señalar infravaloración o problemas de fondo.':pb<3?'Relación P/B razonable.':'P/B alto: el mercado valora intangibles o crecimiento por encima del valor contable.'));
+
+  // Dividend yield
+  const divYield = div>0 ? div/price*100 : 0;
+  if(div>0) formulas.push(F('Rendimiento por dividendo','Ingreso','Yield = Dividendo anual / Precio × 100', divYield, '%',
+    'Retorno anual por dividendos respecto al precio actual.',
+    divYield>3?'Rendimiento por dividendo atractivo para inversores que buscan ingresos.':'Rendimiento por dividendo modesto; el retorno dependería más de la apreciación del precio.'));
+
+  // Gordon (valor intrínseco por dividendos crecientes) si hay dividendo
+  let gordon=null;
+  if(div>0 && er/100 > g){
+    gordon = (div*(1+g)) / (er/100 - g);
+    formulas.push(F('Modelo de Gordon (valor intrínseco)','Valoración','V = D₁ / (r − g)', gordon, '$ por acción',
+      'Valor teórico de la acción según el valor presente de dividendos futuros crecientes.',
+      gordon>price?`El valor intrínseco estimado ($${fmt(gordon)}) supera el precio actual ($${fmt(price)}), lo que sugiere potencial de subvaloración.`:`El valor intrínseco estimado ($${fmt(gordon)}) está por debajo del precio actual ($${fmt(price)}), lo que sugiere que la acción podría estar cara según este modelo.`));
+  }
+
+  // CAPM
+  const rf=4.5, mrp=5.5; // libre de riesgo y prima de mercado supuestas
+  const capm = rf + beta*mrp;
+  formulas.push(F('Rentabilidad requerida (CAPM)','Riesgo','E(R) = Rf + β × (Rm − Rf)', capm, '%',
+    `Rentabilidad mínima exigida según el riesgo sistemático (β=${fmt(beta)}). Supuestos: Rf=${rf}%, prima=${mrp}%.`,
+    er>=capm?`La rentabilidad esperada (${fmt(er)}%) supera la requerida por CAPM (${fmt(capm)}%): la acción compensaría su riesgo sistemático.`:`La rentabilidad esperada (${fmt(er)}%) es inferior a la requerida por CAPM (${fmt(capm)}%): no compensaría plenamente su riesgo de mercado.`));
+
+  // Sharpe (aprox con vol)
+  const sharpe = vol>0 ? (er-rf)/vol : null;
+  if(sharpe!=null) formulas.push(F('Ratio de Sharpe','Riesgo','S = (R − Rf) / σ', sharpe, '',
+    'Rentabilidad excedente por unidad de riesgo total (volatilidad).',
+    sharpe>1?'Excelente relación rentabilidad-riesgo (Sharpe > 1).':sharpe>0.5?'Relación rentabilidad-riesgo aceptable.':sharpe>0?'Relación rentabilidad-riesgo baja: poco premio por el riesgo asumido.':'Sharpe negativo: la rentabilidad esperada no supera la tasa libre de riesgo.'));
+
+  // ROE
+  if(d.roe!=null) formulas.push(F('Rentabilidad sobre patrimonio (ROE)','Rentabilidad','ROE = Utilidad neta / Patrimonio', d.roe, '%',
+    'Eficiencia de la empresa para generar beneficio con el capital de los accionistas.',
+    d.roe>15?'ROE sólido: la empresa genera buen retorno sobre el capital propio.':'ROE moderado o bajo: revisar la eficiencia en el uso del capital.'));
+
+  // Apalancamiento
+  if(d.debtEquity!=null) formulas.push(F('Razón Deuda/Patrimonio','Solvencia','D/E = Deuda total / Patrimonio', d.debtEquity, 'veces',
+    'Grado de apalancamiento financiero de la empresa.',
+    d.debtEquity<1?'Estructura de capital conservadora.':d.debtEquity<2?'Apalancamiento moderado.':'Apalancamiento elevado: mayor riesgo financiero ante caídas de ingresos o subidas de tasas.'));
+
+  // KPIs
+  kpis.push({lbl:'Precio actual', val:fmtMoney(price), cls:''});
+  if(per!=null) kpis.push({lbl:'P/E', val:fmt(per)+'×', cls:per<25?'g':'a'});
+  kpis.push({lbl:'Rent. esperada', val:fmtPct(er), cls:'g'});
+  kpis.push({lbl:'Volatilidad', val:fmtPct(vol), cls:vol>35?'r':'a'});
+  if(sharpe!=null) kpis.push({lbl:'Sharpe', val:fmt(sharpe), cls:sharpe>0.5?'g':sharpe>0?'a':'r'});
+  if(gordon!=null) kpis.push({lbl:'Valor intrínseco', val:fmtMoney(gordon), cls:gordon>price?'g':'r'});
+
+  // Factores de riesgo (0=bueno,100=malo)
+  const riskFactors=[];
+  riskFactors.push(RF('Volatilidad', Math.min(100, vol/0.5), `Volatilidad anual de ${fmt(vol)}%. ${vol>35?'Alta: oscilaciones de precio pronunciadas.':vol>20?'Media: típica de renta variable.':'Baja para una acción.'}`));
+  riskFactors.push(RF('Riesgo de mercado (β)', Math.min(100, beta*45), `Beta de ${fmt(beta)}. ${beta>1.3?'Amplifica los movimientos del mercado.':beta>0.8?'Se mueve en línea con el mercado.':'Menos sensible que el mercado.'}`));
+  if(per!=null) riskFactors.push(RF('Valoración (P/E)', Math.min(100, Math.max(0,(per-10)*3.3)), `P/E de ${fmt(per)}×. ${per>30?'Valoración exigente: vulnerable a decepciones.':per>20?'Valoración algo elevada.':'Valoración contenida.'}`));
+  if(d.debtEquity!=null) riskFactors.push(RF('Apalancamiento', Math.min(100, d.debtEquity*33), `D/E de ${fmt(d.debtEquity)}. ${d.debtEquity>2?'Endeudamiento alto.':'Endeudamiento manejable.'}`));
+  const capmGap = capm-er; // positivo = no compensa
+  riskFactors.push(RF('Premio vs. CAPM', Math.min(100, Math.max(0, 50+capmGap*8)), capmGap<=0?`Compensa su riesgo sistemático (+${fmt(-capmGap)}% sobre lo requerido).`:`No compensa del todo su riesgo (${fmt(capmGap)}% por debajo de lo requerido).`));
+
+  return {
+    kpis, formulas, riskFactors,
+    mc:{ mean:price, sigma:vol/100, expReturnAnnual:er/100, horizonYears:1, label:'precio de la acción' },
+    stressBase:{ price, vol:vol/100, er:er/100 },
+    verdictInputs:{ er, capm, sharpe, vol, gordon, price }
+  };
+}
+
+// ───────────────────────────────────────────────
+// BONOS
+// ───────────────────────────────────────────────
+function analyzeBono(d){
+  const face=d.faceValue, pricePct=d.price, cpn=d.coupon/100, freq=parseInt(d.couponFreq||'2');
+  const N=d.maturity, mkt=d.marketRate/100, infl=(d.inflation||0)/100, rating=d.rating||'BBB';
+  const formulas=[], kpis=[];
+  const cleanPrice = face*pricePct/100;
+  const couponPmt = face*cpn/freq;
+  const periods = N*freq;
+  const rPer = mkt/freq;
+
+  // Precio teórico (VP de flujos)
+  let pv=0;
+  for(let t=1;t<=periods;t++){ pv += couponPmt/Math.pow(1+rPer,t); }
+  pv += face/Math.pow(1+rPer,periods);
+  formulas.push(F('Precio teórico del bono','Valoración','P = Σ C/(1+r)ᵗ + VN/(1+r)ⁿ', pv, '$',
+    'Valor presente de todos los cupones futuros más el valor nominal, descontados a la tasa de mercado.',
+    pv>cleanPrice?`El precio teórico ($${fmt(pv)}) supera el precio de mercado ($${fmt(cleanPrice)}): el bono podría estar infravalorado.`:`El precio teórico ($${fmt(pv)}) está por debajo del precio de mercado ($${fmt(cleanPrice)}): el bono podría estar caro.`));
+
+  // YTM aproximado (fórmula de aproximación)
+  const ytmApprox = ((couponPmt*freq) + (face-cleanPrice)/N) / ((face+cleanPrice)/2) * 100;
+  formulas.push(F('Rendimiento al vencimiento (YTM aprox.)','Rendimiento','YTM ≈ [C + (VN−P)/n] / [(VN+P)/2]', ytmApprox, '%',
+    'Rendimiento anual total si se mantiene el bono hasta el vencimiento.',
+    ytmApprox>d.marketRate?`El YTM (${fmt(ytmApprox)}%) supera la tasa de mercado de referencia: el bono ofrece un rendimiento competitivo.`:`El YTM (${fmt(ytmApprox)}%) está cerca o por debajo de la tasa de referencia.`));
+
+  // Rendimiento corriente
+  const currentYield = (face*cpn)/cleanPrice*100;
+  formulas.push(F('Rendimiento corriente','Rendimiento','RC = Cupón anual / Precio × 100', currentYield, '%',
+    'Retorno anual por cupones respecto al precio pagado.',
+    'Mide el flujo de ingreso inmediato, sin considerar la ganancia o pérdida de capital al vencimiento.'));
+
+  // Duración de Macaulay y modificada
+  let macaulay=0;
+  for(let t=1;t<=periods;t++){ macaulay += (t/freq)*(couponPmt/Math.pow(1+rPer,t)); }
+  macaulay += N*(face/Math.pow(1+rPer,periods));
+  macaulay = macaulay/pv;
+  const modDur = macaulay/(1+rPer);
+  formulas.push(F('Duración de Macaulay','Sensibilidad','D = Σ t·VP(flujoₜ) / Precio', macaulay, 'años',
+    'Plazo promedio ponderado en el que se recuperan los flujos del bono.',
+    `El bono recupera su inversión en promedio en ${fmt(macaulay)} años. Mayor duración implica mayor sensibilidad a las tasas.`));
+  formulas.push(F('Duración modificada','Sensibilidad','Dₘ = D / (1 + r/f)', modDur, '%',
+    'Variación porcentual del precio ante un cambio de 1% en las tasas de interés.',
+    `Si las tasas suben 1%, el precio caería aproximadamente ${fmt(modDur)}%. Si bajan 1%, subiría en proporción similar.`));
+
+  // Convexidad (aprox)
+  let convex=0;
+  for(let t=1;t<=periods;t++){ convex += couponPmt*t*(t+1)/Math.pow(1+rPer,t+2); }
+  convex += face*periods*(periods+1)/Math.pow(1+rPer,periods+2);
+  convex = convex/(pv*freq*freq);
+  formulas.push(F('Convexidad','Sensibilidad','C = Σ t(t+1)·VP / [P·(1+r)²]', convex, '',
+    'Corrige la estimación de la duración para grandes cambios de tasas (curvatura precio-rendimiento).',
+    'Una mayor convexidad es favorable: el bono gana más cuando las tasas bajan de lo que pierde cuando suben.'));
+
+  // Rendimiento real
+  const realYield = ((1+ytmApprox/100)/(1+infl)-1)*100;
+  if(infl>0) formulas.push(F('Rendimiento real (Fisher)','Rendimiento','r_real = [(1+YTM)/(1+π)] − 1', realYield, '%',
+    'Rendimiento ajustado por la inflación esperada.',
+    realYield>0?`Tras la inflación (${fmt(d.inflation)}%), el bono conserva poder adquisitivo con un rendimiento real de ${fmt(realYield)}%.`:`El rendimiento real es negativo: la inflación esperada erosiona el poder adquisitivo del rendimiento nominal.`));
+
+  // KPIs
+  kpis.push({lbl:'Precio mercado', val:fmtMoney(cleanPrice), cls:''});
+  kpis.push({lbl:'Precio teórico', val:fmtMoney(pv), cls:pv>cleanPrice?'g':'r'});
+  kpis.push({lbl:'YTM', val:fmtPct(ytmApprox), cls:'b'});
+  kpis.push({lbl:'Duración mod.', val:fmt(modDur), cls:modDur>7?'r':modDur>4?'a':'g'});
+  if(infl>0) kpis.push({lbl:'Rend. real', val:fmtPct(realYield), cls:realYield>0?'g':'r'});
+
+  // Riesgo crediticio por rating
+  const ratingScore = {AAA:5,AA:12,A:22,BBB:38,BB:58,B:75,CCC:92}[rating] || 50;
+  const riskFactors=[];
+  riskFactors.push(RF('Riesgo de tasa de interés', Math.min(100, modDur*9), `Duración modificada de ${fmt(modDur)}. ${modDur>7?'Alta sensibilidad: vulnerable a subidas de tasas.':modDur>4?'Sensibilidad media.':'Baja sensibilidad a tasas.'}`));
+  riskFactors.push(RF('Riesgo crediticio', ratingScore, `Calificación ${rating}. ${ratingScore<25?'Emisor de alta calidad, bajo riesgo de impago.':ratingScore<55?'Grado de inversión con riesgo moderado.':'Grado especulativo: mayor riesgo de incumplimiento.'}`));
+  const inflRisk = infl>0 ? Math.min(100, Math.max(0, 50 - realYield*8)) : 40;
+  riskFactors.push(RF('Riesgo de inflación', inflRisk, infl>0?(realYield>0?'El rendimiento supera la inflación esperada.':'La inflación esperada supera el rendimiento: riesgo de pérdida de poder adquisitivo.'):'Inflación no especificada.'));
+  const valGap = (cleanPrice-pv)/pv*100;
+  riskFactors.push(RF('Riesgo de valoración', Math.min(100, Math.max(0, 50+valGap*5)), valGap<=0?'Cotiza por debajo de su valor teórico.':'Cotiza por encima de su valor teórico.'));
+
+  return {
+    kpis, formulas, riskFactors,
+    mc:{ mean:cleanPrice, sigma:Math.max(0.02, modDur*0.01*1.5), expReturnAnnual:ytmApprox/100, horizonYears:1, label:'precio del bono', special:'bond' },
+    stressBase:{ price:cleanPrice, modDur, ytm:ytmApprox/100 },
+    verdictInputs:{ ytm:ytmApprox, marketRate:d.marketRate, modDur, ratingScore, realYield:infl>0?realYield:null, valGap, priceVsTheory:pv-cleanPrice }
+  };
+}
+
+// ───────────────────────────────────────────────
+// DIVISAS (FOREX)
+// ───────────────────────────────────────────────
+function analyzeDivisa(d){
+  const px=d.price, rB=d.rateBase/100, rQ=d.rateQuote/100, vol=d.volatility;
+  const iB=(d.inflationBase||0)/100, iQ=(d.inflationQuote||0)/100;
+  const horizon=(d.horizon||12)/12, er=(d.expReturn||0)/100;
+  const formulas=[], kpis=[];
+
+  // Diferencial de tasas (carry)
+  const carry = (rB-rQ)*100;
+  formulas.push(F('Diferencial de tasas (carry)','Carry','Carry = i_base − i_cotizada', carry, '%',
+    'Diferencia entre las tasas de interés de ambas divisas. Base del carry trade.',
+    carry>0?`La divisa base ofrece ${fmt(carry)}% más de interés: mantener una posición larga genera carry positivo.`:`La divisa cotizada ofrece mayor interés (${fmt(-carry)}%): una posición larga en el par tendría carry negativo (costo de mantenimiento).`));
+
+  // Tipo de cambio forward (paridad de tasas)
+  const fwd = px * (1+rQ*horizon)/(1+rB*horizon);
+  formulas.push(F('Tipo de cambio forward (PTI)','Paridad','F = S × (1+i_cot·t)/(1+i_base·t)', fwd, '',
+    'Tipo de cambio teórico a futuro según la paridad de tasas de interés.',
+    fwd>px?`La paridad implica una depreciación esperada de la base (forward ${fmt(fwd,4)} > spot ${fmt(px,4)}).`:`La paridad implica una apreciación esperada de la base (forward ${fmt(fwd,4)} < spot ${fmt(px,4)}).`));
+
+  // Paridad del poder adquisitivo (PPA)
+  if(iB||iQ){
+    const ppaExpected = px * (1+iQ)/(1+iB);
+    formulas.push(F('Tipo de cambio según PPA','Paridad','S_ppa = S × (1+π_cot)/(1+π_base)', ppaExpected, '',
+      'Tipo de cambio que igualaría el poder adquisitivo entre ambas economías.',
+      ppaExpected>px?`Según la inflación relativa, la base tendería a depreciarse hacia ${fmt(ppaExpected,4)}.`:`Según la inflación relativa, la base tendería a apreciarse hacia ${fmt(ppaExpected,4)}.`));
+  }
+
+  // Retorno total esperado (apreciación + carry)
+  const totalRet = er*100 + carry;
+  formulas.push(F('Retorno total esperado','Rendimiento','R = apreciación + carry', totalRet, '%',
+    'Retorno combinado por movimiento del tipo de cambio más el diferencial de tasas.',
+    totalRet>0?`El retorno total esperado es positivo (${fmt(totalRet)}%): apreciación y/o carry favorecen la posición.`:`El retorno total esperado es negativo (${fmt(totalRet)}%): el carry o la depreciación esperada penalizan la posición.`));
+
+  // Sharpe del par
+  const rf=4.5;
+  const sharpe = vol>0 ? (totalRet-0)/vol : null; // en forex el "exceso" se mide vs 0 (es relativo)
+  if(sharpe!=null) formulas.push(F('Ratio rentabilidad-riesgo','Riesgo','S = Retorno esperado / σ', sharpe, '',
+    'Retorno esperado por unidad de volatilidad cambiaria.',
+    sharpe>0.5?'Buena relación retorno-riesgo para una posición cambiaria.':sharpe>0?'Relación retorno-riesgo modesta.':'El retorno esperado no compensa la volatilidad del par.'));
+
+  kpis.push({lbl:'Tipo de cambio', val:fmt(px,4), cls:''});
+  kpis.push({lbl:'Carry (dif. tasas)', val:fmtPct(carry), cls:carry>0?'g':'r'});
+  kpis.push({lbl:'Forward teórico', val:fmt(fwd,4), cls:'b'});
+  kpis.push({lbl:'Retorno total esp.', val:fmtPct(totalRet), cls:totalRet>0?'g':'r'});
+  kpis.push({lbl:'Volatilidad', val:fmtPct(vol), cls:vol>12?'r':'a'});
+
+  const riskFactors=[];
+  riskFactors.push(RF('Volatilidad cambiaria', Math.min(100, vol/0.15), `Volatilidad de ${fmt(vol)}%. ${vol>12?'Alta para una divisa: movimientos amplios.':vol>7?'Media.':'Baja: par relativamente estable.'}`));
+  riskFactors.push(RF('Carry', carry>=0?Math.max(0,40-carry*8):Math.min(100,50-carry*10), carry>=0?'Carry positivo: favorece mantener la posición.':'Carry negativo: costo por mantener la posición abierta.'));
+  riskFactors.push(RF('Riesgo de paridad', Math.min(100, Math.abs((fwd-px)/px*100)*12), `La paridad de tasas implica un ajuste de ${fmt((fwd-px)/px*100)}% en el tipo de cambio.`));
+  riskFactors.push(RF('Riesgo macro (inflación)', (iB||iQ)?Math.min(100, Math.abs(iQ-iB)*100*15):45, (iB||iQ)?`Diferencial de inflación de ${fmt(Math.abs(iQ-iB)*100)}% entre ambas economías.`:'Datos de inflación no especificados.'));
+
+  return {
+    kpis, formulas, riskFactors,
+    mc:{ mean:px, sigma:vol/100, expReturnAnnual:(er + (rB-rQ)), horizonYears:horizon, label:'tipo de cambio', decimals:4 },
+    stressBase:{ price:px, vol:vol/100 },
+    verdictInputs:{ totalRet, carry, sharpe, vol }
+  };
+}
+
+// ───────────────────────────────────────────────
+// FUTUROS
+// ───────────────────────────────────────────────
+function analyzeFuturo(d){
+  const fut=d.price, spot=d.spot, size=d.contractSize, margin=d.margin, vol=d.volatility;
+  const days=d.daysToExpiry, rf=(d.riskFreeRate||5)/100, storage=(d.storageCost||0)/100;
+  const er=(d.expReturn||0)/100;
+  const t = days/365;
+  const formulas=[], kpis=[];
+
+  // Valor nocional y apalancamiento
+  const notional = fut*size;
+  const leverage = notional/margin;
+  formulas.push(F('Valor nocional del contrato','Exposición','Nocional = Precio × Tamaño', notional, '$',
+    'Valor total del activo subyacente controlado por un contrato.',
+    `Cada contrato controla $${fmt(notional)} de subyacente con apenas $${fmt(margin)} de margen.`));
+  formulas.push(F('Apalancamiento','Exposición','L = Nocional / Margen', leverage, 'veces',
+    'Cuántas veces se multiplica la exposición respecto al capital aportado.',
+    leverage>15?`Apalancamiento muy alto (${fmt(leverage)}×): las ganancias y pérdidas se amplifican drásticamente.`:leverage>8?`Apalancamiento elevado (${fmt(leverage)}×): gestionar el riesgo con cuidado.`:`Apalancamiento moderado (${fmt(leverage)}×).`));
+
+  // Base
+  const basis = fut-spot;
+  const basisPct = basis/spot*100;
+  formulas.push(F('Base (futuro − spot)','Estructura','Base = F − S', basis, '$',
+    'Diferencia entre el precio del futuro y el precio al contado.',
+    basis>0?`Base positiva (contango): el futuro cotiza ${fmt(basisPct)}% por encima del spot, reflejando costos de acarreo o expectativas alcistas.`:`Base negativa (backwardation): el futuro cotiza por debajo del spot, señal de escasez o fuerte demanda inmediata.`));
+
+  // Precio teórico (cost of carry)
+  const theoryF = spot*Math.exp((rf+storage)*t);
+  formulas.push(F('Precio teórico del futuro','Valoración','F = S × e^((r+c)·t)', theoryF, '$',
+    'Precio justo del futuro según el modelo de costo de acarreo (cost of carry).',
+    Math.abs(theoryF-fut)/fut<0.02?'El futuro cotiza muy cerca de su valor teórico: mercado eficiente, sin arbitraje evidente.':theoryF>fut?`El futuro ($${fmt(fut)}) cotiza por debajo de su valor teórico ($${fmt(theoryF)}): posible oportunidad de compra.`:`El futuro ($${fmt(fut)}) cotiza por encima de su valor teórico ($${fmt(theoryF)}): podría estar sobrevalorado.`));
+
+  // Movimiento de margen / sensibilidad
+  const moveFor10pct = notional*0.10;
+  formulas.push(F('Impacto de un movimiento del 10%','Riesgo','ΔP&L = Nocional × Δ%', moveFor10pct, '$',
+    'Ganancia o pérdida ante un movimiento del 10% en el subyacente.',
+    `Un movimiento del 10% genera $${fmt(moveFor10pct)} de P&L, equivalente al ${fmt(moveFor10pct/margin*100)}% del margen aportado.`));
+
+  kpis.push({lbl:'Precio futuro', val:fmtMoney(fut), cls:''});
+  kpis.push({lbl:'Apalancamiento', val:fmt(leverage)+'×', cls:leverage>12?'r':leverage>6?'a':'g'});
+  kpis.push({lbl:'Base', val:(basis>=0?'+':'')+fmt(basis), cls:basis>=0?'a':'g'});
+  kpis.push({lbl:'Precio teórico', val:fmtMoney(theoryF), cls:'b'});
+  kpis.push({lbl:'Volatilidad', val:fmtPct(vol), cls:vol>30?'r':'a'});
+
+  const riskFactors=[];
+  riskFactors.push(RF('Apalancamiento', Math.min(100, leverage*5.5), `${fmt(leverage)}× de apalancamiento. ${leverage>15?'Riesgo de liquidación elevado ante movimientos adversos.':'Exposición amplificada respecto al capital.'}`));
+  riskFactors.push(RF('Volatilidad', Math.min(100, vol/0.45), `Volatilidad de ${fmt(vol)}%. ${vol>30?'Alta: típica de materias primas.':'Moderada.'}`));
+  riskFactors.push(RF('Riesgo de tiempo', Math.min(100, Math.max(10, 100-days/2)), `${days} días al vencimiento. ${days<30?'Cercano al vencimiento: mayor presión de cierre/rollover.':'Plazo holgado.'}`));
+  riskFactors.push(RF('Desvío vs. valor teórico', Math.min(100, Math.abs((fut-theoryF)/theoryF*100)*10), `El futuro se desvía ${fmt((fut-theoryF)/theoryF*100)}% de su valor teórico.`));
+
+  return {
+    kpis, formulas, riskFactors,
+    mc:{ mean:fut, sigma:vol/100, expReturnAnnual:er, horizonYears:t, label:'precio del futuro' },
+    stressBase:{ price:fut, vol:vol/100, leverage, margin, notional },
+    verdictInputs:{ leverage, vol, basisPct, theoryGap:(fut-theoryF)/theoryF*100, days }
+  };
+}
+
+// ───────────────────────────────────────────────
+// DERIVADOS (OPCIONES) — Black-Scholes
+// ───────────────────────────────────────────────
+function analyzeDerivado(d){
+  const S=d.spot, K=d.strike, vol=d.volatility/100, days=d.daysToExpiry;
+  const r=d.riskFreeRate/100, q=(d.dividend||0)/100, isCall=d.optType==='call';
+  const mktPrice=d.price;
+  const t=days/365;
+  const formulas=[], kpis=[];
+
+  const d1=(Math.log(S/K)+(r-q+vol*vol/2)*t)/(vol*Math.sqrt(t));
+  const d2=d1-vol*Math.sqrt(t);
+  const Nd1=normCDF(d1), Nd2=normCDF(d2), Nnd1=normCDF(-d1), Nnd2=normCDF(-d2);
+
+  // Precio Black-Scholes
+  let bsPrice;
+  if(isCall) bsPrice = S*Math.exp(-q*t)*Nd1 - K*Math.exp(-r*t)*Nd2;
+  else bsPrice = K*Math.exp(-r*t)*Nnd2 - S*Math.exp(-q*t)*Nnd1;
+  formulas.push(F('Valor teórico (Black-Scholes)','Valoración', isCall?'C = S·e^(−qt)·N(d₁) − K·e^(−rt)·N(d₂)':'P = K·e^(−rt)·N(−d₂) − S·e^(−qt)·N(−d₁)', bsPrice, '$',
+    'Precio justo de la opción según el modelo Black-Scholes-Merton.',
+    mktPrice!=null ? (Math.abs(bsPrice-mktPrice)/mktPrice<0.05?`El valor teórico ($${fmt(bsPrice)}) coincide con la prima de mercado ($${fmt(mktPrice)}): opción justamente valorada.`:bsPrice>mktPrice?`El valor teórico ($${fmt(bsPrice)}) supera la prima de mercado ($${fmt(mktPrice)}): la opción podría estar barata.`:`El valor teórico ($${fmt(bsPrice)}) es menor que la prima de mercado ($${fmt(mktPrice)}): la opción podría estar cara.`) : `Valor teórico de la prima: $${fmt(bsPrice)} por acción.`));
+
+  // Valor intrínseco y temporal
+  const intrinsic = isCall ? Math.max(0,S-K) : Math.max(0,K-S);
+  const timeValue = bsPrice - intrinsic;
+  formulas.push(F('Valor intrínseco','Composición', isCall?'VI = máx(S − K, 0)':'VI = máx(K − S, 0)', intrinsic, '$',
+    'Valor que tendría la opción si se ejerciera ahora mismo.',
+    intrinsic>0?`La opción está "dentro del dinero" por $${fmt(intrinsic)}.`:`La opción está "fuera del dinero": su valor es enteramente temporal.`));
+  formulas.push(F('Valor temporal','Composición','VT = Prima − Valor intrínseco', timeValue, '$',
+    'Parte de la prima que refleja la probabilidad de que la opción gane valor antes de vencer.',
+    `El valor temporal ($${fmt(timeValue)}) se erosiona conforme se acerca el vencimiento (decaimiento theta).`));
+
+  // Griegas
+  const expQt=Math.exp(-q*t);
+  const delta = isCall ? expQt*Nd1 : expQt*(Nd1-1);
+  const gamma = expQt*normPDF(d1)/(S*vol*Math.sqrt(t));
+  const vega = S*expQt*normPDF(d1)*Math.sqrt(t)/100;
+  let theta;
+  if(isCall) theta = (-S*expQt*normPDF(d1)*vol/(2*Math.sqrt(t)) - r*K*Math.exp(-r*t)*Nd2 + q*S*expQt*Nd1)/365;
+  else theta = (-S*expQt*normPDF(d1)*vol/(2*Math.sqrt(t)) + r*K*Math.exp(-r*t)*Nnd2 - q*S*expQt*Nnd1)/365;
+  const rho = (isCall ? K*t*Math.exp(-r*t)*Nd2 : -K*t*Math.exp(-r*t)*Nnd2)/100;
+
+  formulas.push(F('Delta (Δ)','Griega','Δ = e^(−qt)·N(d₁)', delta, '',
+    'Cuánto cambia la prima por cada $1 de movimiento del subyacente.',
+    `Por cada $1 que se mueva el subyacente, la prima varía aproximadamente $${fmt(Math.abs(delta))}. ${Math.abs(delta)>0.5?'La opción se comporta de forma parecida al subyacente.':'La opción responde con menor intensidad que el subyacente.'}`));
+  formulas.push(F('Gamma (Γ)','Griega','Γ = e^(−qt)·φ(d₁)/(S·σ·√t)', gamma, '',
+    'Cuánto cambia el delta por cada $1 de movimiento del subyacente.',
+    'Un gamma alto implica que el delta es inestable: la opción es muy reactiva cerca del precio de ejercicio.'));
+  formulas.push(F('Theta (Θ)','Griega','Θ = decaimiento temporal diario', theta, '$/día',
+    'Cuánto pierde la opción de valor cada día que pasa, por el solo transcurso del tiempo.',
+    `La opción pierde alrededor de $${fmt(Math.abs(theta))} por día por decaimiento temporal. ${isCall?'':'(Para el comprador de la put.)'}`));
+  formulas.push(F('Vega (ν)','Griega','ν = S·e^(−qt)·φ(d₁)·√t', vega, '$/1% vol',
+    'Cuánto cambia la prima por cada 1% de cambio en la volatilidad implícita.',
+    `Si la volatilidad sube 1%, la prima aumenta unos $${fmt(vega)}. Las opciones son muy sensibles a la volatilidad.`));
+
+  // Probabilidad de ejercicio (riesgo-neutral)
+  const probITM = isCall ? Nd2 : Nnd2;
+  formulas.push(F('Probabilidad de terminar dentro del dinero','Probabilidad', isCall?'P ≈ N(d₂)':'P ≈ N(−d₂)', probITM*100, '%',
+    'Probabilidad (riesgo-neutral) de que la opción expire con valor.',
+    probITM>0.5?`Más del 50% de probabilidad de terminar con valor (${fmt(probITM*100)}%).`:`Menos del 50% de probabilidad de terminar con valor (${fmt(probITM*100)}%): apuesta especulativa.`));
+
+  kpis.push({lbl:'Valor teórico (BS)', val:fmtMoney(bsPrice), cls:'b'});
+  if(mktPrice!=null) kpis.push({lbl:'Prima mercado', val:fmtMoney(mktPrice), cls:bsPrice>mktPrice?'g':'r'});
+  kpis.push({lbl:'Delta', val:fmt(delta), cls:''});
+  kpis.push({lbl:'Theta', val:fmt(theta)+'/día', cls:'r'});
+  kpis.push({lbl:'Prob. ITM', val:fmtPct(probITM*100), cls:probITM>0.5?'g':'a'});
+
+  const moneyness = isCall ? (S/K) : (K/S);
+  const riskFactors=[];
+  riskFactors.push(RF('Probabilidad de pérdida total', Math.min(100, (1-probITM)*100), `${fmt((1-probITM)*100)}% de probabilidad de expirar sin valor. Las opciones pueden perder el 100% de la prima.`));
+  riskFactors.push(RF('Decaimiento temporal', Math.min(100, Math.abs(theta)/bsPrice*100*30), `Theta de $${fmt(Math.abs(theta))}/día. El tiempo juega en contra del comprador de la opción.`));
+  riskFactors.push(RF('Sensibilidad a volatilidad', Math.min(100, vega/bsPrice*100*8), `Vega de $${fmt(vega)}. Cambios en la volatilidad implícita afectan fuertemente la prima.`));
+  riskFactors.push(RF('Posición (moneyness)', moneyness<0.97?80:moneyness<1.0?55:moneyness<1.05?30:15, moneyness<1?'Fuera del dinero: depende de un movimiento favorable para ganar valor.':'Dentro o cerca del dinero: mayor probabilidad de retener valor.'));
+
+  return {
+    kpis, formulas, riskFactors,
+    mc:{ mean:S, sigma:vol, expReturnAnnual:r-q, horizonYears:t, label:'precio del subyacente', option:{K,isCall,bsPrice,t} },
+    stressBase:{ S, K, isCall, bsPrice, delta, vol, t },
+    verdictInputs:{ probITM, bsPrice, mktPrice, theta, moneyness, intrinsic }
+  };
+}
+
+// Despachador
+const ANALYZERS = { accion:analyzeAccion, bono:analyzeBono, divisa:analyzeDivisa, futuro:analyzeFuturo, derivado:analyzeDerivado };
+
+// ══════════════════════════════════════════════════════════════
+// SIMULACIÓN MONTE CARLO
+// ══════════════════════════════════════════════════════════════
+function gaussRandom(){
+  let u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+
+function runMonteCarlo(mc){
+  const N=10000;
+  const { mean, sigma, expReturnAnnual, horizonYears } = mc;
+  const drift = (expReturnAnnual - 0.5*sigma*sigma)*horizonYears;
+  const diffusion = sigma*Math.sqrt(horizonYears);
+  const finals=[];
+  for(let i=0;i<N;i++){
+    const z=gaussRandom();
+    const ST = mean*Math.exp(drift + diffusion*z);
+    finals.push(ST);
+  }
+  finals.sort((a,b)=>a-b);
+  const pct = p => finals[Math.floor(p*N)];
+  const meanFinal = finals.reduce((s,x)=>s+x,0)/N;
+  const p5=pct(0.05), p50=pct(0.50), p95=pct(0.95), p25=pct(0.25), p75=pct(0.75);
+  // VaR 95% sobre el retorno
+  const var95Ret = (p5/mean - 1)*100;
+  const var95Abs = mean - p5;
+  // Probabilidad de pérdida (terminar por debajo del valor inicial)
+  let below=0; for(const x of finals) if(x<mean) below++;
+  const probLoss = below/N*100;
+  // Retorno esperado realizado
+  const expRet = (meanFinal/mean-1)*100;
+
+  // Histograma (40 bins)
+  const bins=40;
+  const lo=finals[0], hi=finals[N-1], w=(hi-lo)/bins;
+  const hist=new Array(bins).fill(0);
+  const labels=[];
+  for(const x of finals){ let idx=Math.min(bins-1,Math.floor((x-lo)/w)); hist[idx]++; }
+  for(let i=0;i<bins;i++) labels.push(lo+w*(i+0.5));
+
+  return { N, meanFinal, p5,p25,p50,p75,p95, var95Ret, var95Abs, probLoss, expRet, hist, labels, lo, hi, initial:mean };
+}
+
+// ══════════════════════════════════════════════════════════════
+// VEREDICTO Y PUNTAJE DE RIESGO
+// ══════════════════════════════════════════════════════════════
+function computeVerdict(result, mcRes){
+  // Riesgo global = promedio ponderado de factores (todos 0..100)
+  const factors = result.riskFactors;
+  const riskScore = factors.reduce((s,f)=>s+f.score,0)/factors.length;
+
+  // Atractivo (0..100): combina retorno esperado, prob. de pérdida y señales propias del activo
+  let attract = 50;
+  const vi = result.verdictInputs;
+  // Componente Monte Carlo
+  attract += (mcRes.expRet)*1.2;                  // premia retorno esperado
+  attract -= (mcRes.probLoss-50)*0.5;             // penaliza prob de pérdida alta
+  attract -= Math.max(0,(-mcRes.var95Ret)-10)*0.6; // penaliza VaR severo
+
+  // Ajustes específicos por mercado
+  if(currentMarket==='accion'){
+    if(vi.sharpe!=null) attract += vi.sharpe*8;
+    if(vi.gordon!=null && vi.price) attract += (vi.gordon/vi.price-1)*30;
+    if(vi.er!=null && vi.capm!=null) attract += (vi.er-vi.capm)*2;
+  } else if(currentMarket==='bono'){
+    attract += (vi.ytm - vi.marketRate)*6;
+    if(vi.realYield!=null) attract += vi.realYield*3;
+    attract += (vi.priceVsTheory/Math.abs(vi.priceVsTheory||1))* Math.min(15, Math.abs(vi.priceVsTheory)/10);
+    attract -= (vi.ratingScore-30)*0.3;
+  } else if(currentMarket==='divisa'){
+    if(vi.sharpe!=null) attract += vi.sharpe*10;
+    attract += vi.totalRet*1.5;
+  } else if(currentMarket==='futuro'){
+    attract -= Math.max(0,vi.leverage-8)*1.5;
+    attract += vi.theoryGap<0 ? Math.min(12,-vi.theoryGap*2) : -Math.min(12,vi.theoryGap*2);
+  } else if(currentMarket==='derivado'){
+    attract += (vi.probITM-0.5)*60;
+    if(vi.mktPrice!=null) attract += (vi.bsPrice/vi.mktPrice-1)*40;
+    attract -= 10; // las opciones cargan riesgo asimétrico
+  }
+
+  attract = Math.max(0, Math.min(100, attract));
+
+  // Score compuesto: combina atractivo y (100-riesgo)
+  const composite = attract*0.6 + (100-riskScore)*0.4;
+
+  let grade, title, cls, desc;
+  if(composite>=68 && riskScore<60){
+    grade='A'; title='Recomendable invertir'; cls='success';
+    desc='El análisis es favorable: la rentabilidad esperada compensa el riesgo medido y los indicadores fundamentales respaldan la inversión. Aun así, dimensiona la posición según tu tolerancia al riesgo.';
+  } else if(composite>=52){
+    grade='B'; title='Invertir con cautela'; cls='warn';
+    desc='El activo presenta un perfil mixto: hay elementos atractivos, pero también riesgos relevantes que conviene gestionar. Considera una posición moderada, diversificación y un plan de salida claro.';
+  } else if(composite>=38){
+    grade='C'; title='Precaución elevada'; cls='warn';
+    desc='El balance entre riesgo y retorno es desfavorable según los datos ingresados. La inversión solo se justificaría con una tesis muy específica y una gestión de riesgo estricta.';
+  } else {
+    grade='D'; title='No recomendable'; cls='danger';
+    desc='El riesgo medido supera con claridad la recompensa esperada. Con los datos actuales, esta inversión no resulta aconsejable. Reevalúa los supuestos o busca alternativas.';
+  }
+
+  return { grade, title, cls, desc, riskScore, attract, composite };
+}
+
+// ══════════════════════════════════════════════════════════════
+// EJECUTAR ANÁLISIS
+// ══════════════════════════════════════════════════════════════
+function runAnalysis(){
+  const { data, missing } = collectData();
+  if(missing.length){
+    toast('Faltan campos obligatorios: '+missing.slice(0,2).join(', ')+(missing.length>2?'…':''),'err');
+    return;
+  }
+  const result = ANALYZERS[currentMarket](data);
+  const mcRes = runMonteCarlo(result.mc);
+  const verdict = computeVerdict(result, mcRes);
+  const stress = buildStress(result, mcRes, data);
+  lastResult = { data, result, mcRes, verdict, stress, market:currentMarket };
+
+  renderResults();
+  show('page-results');
+  setStep(3);
+}
+
+// ── Pruebas de estrés ──
+function buildStress(result, mcRes, data){
+  const base = result.mc.mean;
+  const scenarios=[
+    {name:'Escenario optimista (P95)', val:mcRes.p95, ret:(mcRes.p95/base-1)*100},
+    {name:'Escenario favorable (P75)', val:mcRes.p75, ret:(mcRes.p75/base-1)*100},
+    {name:'Escenario base (mediana)', val:mcRes.p50, ret:(mcRes.p50/base-1)*100},
+    {name:'Escenario adverso (P25)', val:mcRes.p25, ret:(mcRes.p25/base-1)*100},
+    {name:'Escenario severo (P5 / VaR 95%)', val:mcRes.p5, ret:(mcRes.p5/base-1)*100},
+  ];
+  // Caída de mercado -20%
+  scenarios.push({name:'Choque de mercado (−20% subyacente)', val:base*0.8, ret:-20, shock:true});
+  return scenarios;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDERIZADO DE RESULTADOS
+// ══════════════════════════════════════════════════════════════
+function setAudience(a){
+  audience=a;
+  document.querySelectorAll('#aud-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.aud===a));
+  renderResults();
+}
+
+function renderResults(){
+  if(!lastResult) return;
+  const { data, result, mcRes, verdict, stress, market } = lastResult;
+  const m = MARKETS[market];
+  $('result-asset-name').textContent = (data.ticker||m.name)+' · '+m.name;
+
+  renderVerdict(verdict, mcRes);
+  renderKPIs(result.kpis);
+  renderRiskFactors(result.riskFactors, verdict.riskScore);
+  renderMonteCarlo(mcRes, result.mc);
+  renderStress(stress);
+  renderFormulas(result.formulas);
+}
+
+function renderVerdict(v, mcRes){
+  const colorMap={success:'var(--green)',warn:'var(--amber)',danger:'var(--red)'};
+  const col=colorMap[v.cls];
+  const ringPct = v.composite;
+  const simple = audience==='simple';
+  const riskWord = v.riskScore<35?'BAJO':v.riskScore<60?'MODERADO':'ALTO';
+  $('verdict-box').style.borderColor = col;
+  $('verdict-box').innerHTML = `
+    <div class="verdict-head">
+      <div class="verdict-ring">
+        <canvas id="verdict-ring-c" width="120" height="120"></canvas>
+        <div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;">
+          <div>
+            <div class="verdict-grade" style="color:${col};">${v.grade}</div>
+            <div style="font-size:10px;color:var(--t3);font-family:var(--font-mono);">PUNTAJE</div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict-info">
+        <div class="verdict-label">Recomendación</div>
+        <div class="verdict-title" style="color:${col};">${v.title}</div>
+        <div class="verdict-desc">${v.desc}</div>
+        <div class="verdict-score">
+          Riesgo medido: <b style="color:${v.riskScore<35?'var(--green)':v.riskScore<60?'var(--amber)':'var(--red)'};">${riskWord}</b> (${fmt(v.riskScore,0)}/100)
+          &nbsp;·&nbsp; Atractivo: <b>${fmt(v.attract,0)}/100</b>
+          &nbsp;·&nbsp; Prob. de pérdida: <b>${fmt(mcRes.probLoss,0)}%</b>
+        </div>
+      </div>
+    </div>
+    ${simple ? `<div class="info-box ${v.cls}" style="margin-top:18px;margin-bottom:0;">
+      <b>En palabras simples:</b> ${simpleExplanation(v, mcRes)}
+    </div>`:''}
+  `;
+  drawRing('verdict-ring-c', ringPct, col);
+}
+
+function simpleExplanation(v, mcRes){
+  const g=v.grade;
+  if(g==='A') return `Según los números, esta inversión luce bien. Podría ganar valor y el riesgo está bajo control. De cada 100 escenarios simulados, en cerca de ${fmt(100-mcRes.probLoss,0)} terminarías ganando. Aun así, nunca inviertas más de lo que puedes permitirte arriesgar.`;
+  if(g==='B') return `Esta inversión tiene cosas buenas y cosas riesgosas. Puede salir bien, pero también puede perder valor. En unos ${fmt(mcRes.probLoss,0)} de cada 100 escenarios simulados terminarías perdiendo. Si inviertes, hazlo con una parte pequeña y mantente atento.`;
+  if(g==='C') return `Aquí el riesgo pesa más que la posible ganancia. En muchos escenarios (${fmt(mcRes.probLoss,0)} de cada 100) terminarías perdiendo. Solo tendría sentido si tienes una razón muy concreta para creer que subirá.`;
+  return `Los números dicen que el riesgo es demasiado alto frente a lo que podrías ganar. En la mayoría de escenarios simulados no compensa. Con esta información, lo más prudente es no invertir.`;
+}
+
+function drawRing(id, pct, color){
+  const c=document.getElementById(id); if(!c) return;
+  const ctx=c.getContext('2d'); ctx.clearRect(0,0,120,120);
+  ctx.lineWidth=9; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(60,60,50,0,2*Math.PI); ctx.strokeStyle='rgba(255,255,255,.07)'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(60,60,50,-Math.PI/2, -Math.PI/2 + 2*Math.PI*(pct/100)); ctx.strokeStyle=color; ctx.stroke();
+}
+
+function renderKPIs(kpis){
+  $('kpi-grid').innerHTML = kpis.map(k=>`
+    <div class="kpi">
+      <div class="kpi-lbl">${k.lbl}</div>
+      <div class="kpi-val ${k.cls||''}">${k.val}</div>
+      ${k.sub?`<div class="kpi-sub">${k.sub}</div>`:''}
+    </div>`).join('');
+}
+
+function renderRiskFactors(factors, globalScore){
+  const colorFor = s => s<35?'var(--green)':s<60?'var(--amber)':'var(--red)';
+  let html = factors.map(f=>`
+    <div class="rf">
+      <div class="rf-head">
+        <span class="rf-name">${f.name}</span>
+        <span class="rf-val" style="color:${colorFor(f.score)};">${fmt(f.score,0)}/100</span>
+      </div>
+      <div class="rf-track"><div class="rf-fill" style="width:${f.score}%;background:${colorFor(f.score)};"></div></div>
+      <div class="rf-desc">${f.desc}</div>
+    </div>`).join('');
+  // barra global
+  html = `<div class="rf" style="margin-bottom:6px;">
+      <div class="rf-head">
+        <span class="rf-name" style="font-weight:700;">Riesgo global ponderado</span>
+        <span class="rf-val" style="color:${colorFor(globalScore)};font-weight:700;">${fmt(globalScore,0)}/100</span>
+      </div>
+      <div class="rf-track" style="height:12px;"><div class="rf-fill" style="width:${globalScore}%;background:${colorFor(globalScore)};"></div></div>
+    </div><div style="height:1px;background:var(--c3);margin:6px 0 14px;"></div>` + html;
+  $('risk-factors').innerHTML = html;
+}
+
+function renderMonteCarlo(mc, mcCfg){
+  const dec = mcCfg.decimals||2;
+  $('mc-n').textContent = mc.N.toLocaleString('es-PA');
+  // KPIs MC
+  $('mc-kpis').innerHTML = [
+    {lbl:'Valor inicial', val:fmt(mc.initial,dec), cls:''},
+    {lbl:'Valor esperado', val:fmt(mc.meanFinal,dec), cls:mc.meanFinal>=mc.initial?'g':'r'},
+    {lbl:'Retorno esperado', val:fmtPct(mc.expRet), cls:mc.expRet>=0?'g':'r'},
+    {lbl:'VaR 95%', val:fmtPct(mc.var95Ret), cls:'r', sub:'Pérdida máx. probable'},
+    {lbl:'Prob. de pérdida', val:fmtPct(mc.probLoss,0), cls:mc.probLoss>50?'r':'a'},
+    {lbl:'Rango P5–P95', val:fmt(mc.p5,dec)+' – '+fmt(mc.p95,dec), cls:'b'},
+  ].map(k=>`<div class="kpi"><div class="kpi-lbl">${k.lbl}</div><div class="kpi-val ${k.cls}" style="font-size:17px;">${k.val}</div>${k.sub?`<div class="kpi-sub">${k.sub}</div>`:''}</div>`).join('');
+
+  if(mcChart) mcChart.destroy();
+  const ctx=$('mc-chart').getContext('2d');
+  const initialIdx = mc.labels.findIndex(l=>l>=mc.initial);
+  mcChart=new Chart(ctx,{
+    type:'bar',
+    data:{ labels:mc.labels.map(l=>fmt(l,dec)),
+      datasets:[{ data:mc.hist, backgroundColor:mc.labels.map(l=> l<mc.initial?'rgba(255,71,87,.55)':'rgba(0,208,132,.55)'),
+        borderWidth:0, barPercentage:1, categoryPercentage:1 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ title:(it)=>'Valor ≈ '+it[0].label, label:(it)=>it.raw+' escenarios' } } },
+      scales:{
+        x:{ ticks:{ color:'#5f7491', font:{size:9}, maxTicksLimit:10 }, grid:{display:false} },
+        y:{ ticks:{ color:'#5f7491', font:{size:9} }, grid:{color:'rgba(255,255,255,.03)'}, title:{display:true,text:'N.º de escenarios',color:'#5f7491',font:{size:10}} }
+      } }
+  });
+}
+
+function renderStress(stress){
+  $('stress-table').innerHTML = `
+    <thead><tr><th>Escenario</th><th style="text-align:right;">Valor proyectado</th><th style="text-align:right;">Retorno</th></tr></thead>
+    <tbody>${stress.map(s=>`<tr>
+      <td style="font-family:var(--font-body);">${s.name}</td>
+      <td style="text-align:right;">${fmt(s.val, lastResult.result.mc.decimals||2)}</td>
+      <td style="text-align:right;color:${s.ret>=0?'var(--green)':'var(--red)'};">${s.ret>=0?'+':''}${fmt(s.ret)}%</td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderFormulas(formulas){
+  const cats = ['Todas', ...new Set(formulas.map(f=>f.cat))];
+  $('formula-toolbar').innerHTML = cats.map((c,i)=>`<button class="fchip ${i===0?'active':''}" onclick="filterFormulas('${c}',this)">${c}</button>`).join('');
+  window._allFormulas = formulas;
+  paintFormulas(formulas);
+}
+function filterFormulas(cat, btn){
+  document.querySelectorAll('#formula-toolbar .fchip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const list = cat==='Todas' ? window._allFormulas : window._allFormulas.filter(f=>f.cat===cat);
+  paintFormulas(list);
+}
+function paintFormulas(list){
+  const simple = audience==='simple';
+  $('formula-list').innerHTML = list.map(f=>`
+    <div class="formula">
+      <div class="formula-name">${f.name} <span class="formula-cat">${f.cat}</span></div>
+      <div class="formula-eq">${f.eq}</div>
+      <div class="formula-result"><span class="rv">${typeof f.value==='number'?fmt(f.value, Math.abs(f.value)<10?4:2):f.value}</span><span class="rl">${f.valLabel||''}</span></div>
+      ${!simple?`<div class="formula-desc">${f.desc}</div>`:''}
+      <div class="formula-interp">${f.interp}</div>
+    </div>`).join('');
+}
+
+// ───── Init ─────
+renderMarkets();
+
+</script>
+</body>
+</html>
