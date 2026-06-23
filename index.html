@@ -259,22 +259,22 @@ table.data tr:last-child td{border-bottom:none;}
 
     <!-- Riesgo por factores -->
     <div class="card">
-      <div class="card-title"><i class="ti ti-shield-half"></i> Medición de riesgo por factores</div>
+      <div class="card-title"><i class="ti ti-shield-half"></i> Medición de riesgo por factores (risk assessment)</div>
       <div class="card-sub">Cada factor se evalúa de 0 (favorable) a 100 (desfavorable). El puntaje global combina todos los factores ponderados según el tipo de activo.</div>
       <div class="riskfactors" id="risk-factors"></div>
     </div>
 
     <!-- Monte Carlo -->
     <div class="card">
-      <div class="card-title"><i class="ti ti-chart-histogram"></i> Simulación Monte Carlo</div>
-      <div class="card-sub" id="mc-sub">Proyección de <span id="mc-n">10,000</span> escenarios posibles del valor del activo en el horizonte definido, según su rentabilidad y volatilidad esperadas.</div>
+      <div class="card-title"><i class="ti ti-chart-histogram"></i> Simulación Monte Carlo (Monte Carlo simulation)</div>
+      <div class="card-sub" id="mc-sub">Proyección de <span id="mc-n">10,000</span> escenarios posibles del valor del activo en el horizonte definido, según su rentabilidad esperada (expected return) y su volatilidad (volatility).</div>
       <div class="chart-box"><canvas id="mc-chart"></canvas></div>
       <div class="kpi-grid" id="mc-kpis" style="margin-top:18px;margin-bottom:0;"></div>
     </div>
 
     <!-- Pruebas / escenarios -->
     <div class="card">
-      <div class="card-title"><i class="ti ti-test-pipe"></i> Pruebas de estrés y escenarios</div>
+      <div class="card-title"><i class="ti ti-test-pipe"></i> Pruebas de estrés y escenarios (stress testing)</div>
       <div class="card-sub">Cómo se comportaría la inversión bajo condiciones adversas y favorables.</div>
       <div class="tbl-scroll"><table class="data" id="stress-table"></table></div>
     </div>
@@ -329,18 +329,18 @@ const MARKETS = {
     desc:'Renta variable. Analiza una acción a partir de su precio, fundamentales y volatilidad.',
     formDesc:'Ingresa los datos de la acción. Los campos marcados con * son indispensables; los demás enriquecen el análisis fundamental.',
     fields:[
-      {k:'ticker', label:'Símbolo / Nombre', type:'text', req:true, placeholder:'Ej. AAPL', ex:'AAPL', src:'Símbolo bursátil de la empresa (ticker).'},
-      {k:'price', label:'Precio actual', type:'num', req:true, unit:'$', placeholder:'185.00', ex:185, src:'Cotización en tiempo real: Yahoo Finanzas, Google Finanzas, Investing.com o tu bróker.'},
-      {k:'shares', label:'Acciones en circulación', type:'num', unit:'mill.', placeholder:'15500', ex:15500, note:'En millones', src:'Estados financieros de la empresa o ficha "Statistics" en Yahoo Finanzas.'},
-      {k:'eps', label:'Utilidad por acción (EPS)', type:'num', unit:'$', placeholder:'6.13', ex:6.13, src:'Estado de resultados anual (EPS diluido) o ficha de la acción en Yahoo Finanzas.'},
-      {k:'bookValue', label:'Valor en libros por acción', type:'num', unit:'$', placeholder:'4.40', ex:4.40, src:'Patrimonio neto ÷ acciones en circulación (balance general). En Yahoo: "Book Value Per Share".'},
-      {k:'dividend', label:'Dividendo anual por acción', type:'num', unit:'$', placeholder:'0.96', ex:0.96, src:'Sección de dividendos de la empresa o ficha "Dividend" en Yahoo Finanzas. Cero si no reparte.'},
-      {k:'epsGrowth', label:'Crecimiento esperado de utilidades', type:'num', unit:'%', placeholder:'10', ex:10, note:'Anual estimado', src:'Estimación propia o consenso de analistas ("Growth Estimates" en Yahoo Finanzas).'},
-      {k:'beta', label:'Beta', type:'num', placeholder:'1.25', ex:1.25, note:'Sensibilidad al mercado', src:'Ficha de la acción en Yahoo Finanzas o Investing.com (campo "Beta").'},
-      {k:'volatility', label:'Volatilidad anual', type:'num', unit:'%', req:true, placeholder:'28', ex:28, src:'Desviación estándar anualizada de los retornos. Aproximación: volatilidad implícita de opciones o el dato histórico en Investing.com / portales de análisis técnico.'},
-      {k:'expReturn', label:'Rentabilidad esperada anual', type:'num', unit:'%', req:true, placeholder:'12', ex:12, src:'Estimación propia según análisis fundamental, o precio objetivo de analistas respecto al precio actual.'},
-      {k:'debtEquity', label:'Razón Deuda/Patrimonio', type:'num', placeholder:'1.45', ex:1.45, src:'Balance general (pasivo total ÷ patrimonio) o ficha "Debt/Equity" en Yahoo Finanzas.'},
-      {k:'roe', label:'Rentabilidad sobre patrimonio (ROE)', type:'num', unit:'%', placeholder:'18', ex:18, src:'Ficha "Return on Equity" en Yahoo Finanzas o cálculo: utilidad neta ÷ patrimonio.'},
+      {k:'ticker', label:'Símbolo / Nombre', type:'text', req:true, placeholder:'Ej. AAPL', ex:'AAPL', src:'Símbolo bursátil de la empresa (ticker), visible en el buscador de Yahoo Finance.'},
+      {k:'price', label:'Precio actual', type:'num', req:true, unit:'$', placeholder:'185.00', ex:185, src:'Cotización en tiempo real (market price) en la cabecera de la acción en Yahoo Finance.'},
+      {k:'shares', label:'Acciones en circulación', type:'num', unit:'mill.', placeholder:'15500', ex:15500, note:'En millones', src:'Pestaña "Statistics" en Yahoo Finance, campo "Shares Outstanding" (acciones en circulación).'},
+      {k:'eps', label:'Utilidad por acción (EPS)', type:'num', unit:'$', placeholder:'6.13', ex:6.13, src:'Cabecera de la acción en Yahoo Finance, campo "EPS (TTM)" (utilidad por acción de los últimos doce meses).'},
+      {k:'bookValue', label:'Valor en libros por acción', type:'num', unit:'$', placeholder:'4.40', ex:4.40, src:'Pestaña "Statistics" en Yahoo Finance, campo "Book Value Per Share" (valor en libros por acción).'},
+      {k:'dividend', label:'Dividendo anual por acción', type:'num', unit:'$', placeholder:'0.96', ex:0.96, src:'Cabecera de la acción en Yahoo Finance, campo "Forward Dividend" (dividendo anual proyectado). Cero si no reparte.'},
+      {k:'epsGrowth', label:'Crecimiento esperado de utilidades', type:'num', unit:'%', placeholder:'10', ex:10, note:'Anual estimado', src:'Pestaña "Analysis" en Yahoo Finance, sección "Growth Estimates" (estimaciones de crecimiento).'},
+      {k:'beta', label:'Beta', type:'num', placeholder:'1.25', ex:1.25, note:'Sensibilidad al mercado', src:'Pestaña "Statistics" en Yahoo Finance, campo "Beta (5Y Monthly)" (coeficiente de riesgo sistemático).'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', unit:'%', req:true, placeholder:'28', ex:28, src:'Volatilidad histórica (historical volatility): se estima de la desviación estándar de los retornos del gráfico de precios en Yahoo Finance, o se aproxima con la volatilidad implícita de la pestaña "Options".'},
+      {k:'expReturn', label:'Rentabilidad esperada anual', type:'num', unit:'%', req:true, placeholder:'12', ex:12, src:'Se deduce del precio objetivo (price target) de la pestaña "Analysis" en Yahoo Finance frente al precio actual.'},
+      {k:'debtEquity', label:'Razón Deuda/Patrimonio', type:'num', placeholder:'1.45', ex:1.45, src:'Pestaña "Statistics" en Yahoo Finance, campo "Total Debt/Equity" (razón deuda-patrimonio).'},
+      {k:'roe', label:'Rentabilidad sobre patrimonio (ROE)', type:'num', unit:'%', placeholder:'18', ex:18, src:'Pestaña "Statistics" en Yahoo Finance, campo "Return on Equity" (rentabilidad sobre el patrimonio).'},
     ]
   },
   bono: {
@@ -348,15 +348,15 @@ const MARKETS = {
     desc:'Renta fija. Evalúa un bono soberano o corporativo por su cupón, rendimiento y sensibilidad a tasas.',
     formDesc:'Ingresa las características del bono. El precio se expresa como porcentaje del valor nominal (par = 100).',
     fields:[
-      {k:'ticker', label:'Nombre / Emisor', type:'text', req:true, placeholder:'Ej. Bono UST 10Y', ex:'UST 10Y', src:'Nombre del bono y su emisor (gobierno o empresa).'},
-      {k:'faceValue', label:'Valor nominal', type:'num', req:true, unit:'$', placeholder:'1000', ex:1000, src:'Prospecto de emisión del bono. Suele ser 1,000 o 100 por unidad.'},
-      {k:'price', label:'Precio actual (% del par)', type:'num', req:true, unit:'%', placeholder:'98.5', ex:98.5, src:'Cotización en plataformas de renta fija, tu bróker o portales como Investing.com (sección bonos).'},
-      {k:'coupon', label:'Tasa cupón anual', type:'num', req:true, unit:'%', placeholder:'4.5', ex:4.5, src:'Prospecto de emisión del bono (tasa de interés nominal que paga).'},
-      {k:'couponFreq', label:'Pagos por año', type:'select', options:[['2','Semestral (2)'],['1','Anual (1)'],['4','Trimestral (4)']], ex:'2', src:'Prospecto del bono. Los bonos del Tesoro de EE.UU. pagan semestralmente.'},
-      {k:'maturity', label:'Años al vencimiento', type:'num', req:true, unit:'años', placeholder:'10', ex:10, src:'Diferencia entre la fecha de vencimiento (en el prospecto) y la fecha actual.'},
-      {k:'marketRate', label:'Tasa de mercado / requerida', type:'num', req:true, unit:'%', placeholder:'4.8', ex:4.8, note:'Rendimiento exigido por el mercado', src:'Rendimiento de bonos comparables (mismo plazo y riesgo). Curva de tasas en Investing.com o sitios de bancos centrales.'},
-      {k:'rating', label:'Calificación crediticia', type:'select', options:[['AAA','AAA'],['AA','AA'],['A','A'],['BBB','BBB'],['BB','BB'],['B','B'],['CCC','CCC o inferior']], ex:'AA', src:'Agencias calificadoras: Moody\u2019s, S&P o Fitch (publicadas en sus sitios y en el prospecto).'},
-      {k:'inflation', label:'Inflación esperada', type:'num', unit:'%', placeholder:'3.0', ex:3.0, note:'Para rendimiento real', src:'Proyecciones del banco central del país emisor o de organismos como el FMI.'},
+      {k:'ticker', label:'Nombre / Emisor', type:'text', req:true, placeholder:'Ej. Bono UST 10Y', ex:'UST 10Y', src:'Nombre del bono y su emisor (issuer). Los bonos del Tesoro figuran en la sección "Bonds" de Yahoo Finance.'},
+      {k:'faceValue', label:'Valor nominal', type:'num', req:true, unit:'$', placeholder:'1000', ex:1000, src:'Valor nominal (face value / par value) del bono. Estándar de mercado: 1,000 o 100 por unidad.'},
+      {k:'price', label:'Precio actual (% del par)', type:'num', req:true, unit:'%', placeholder:'98.5', ex:98.5, src:'Precio limpio (clean price) del bono, como porcentaje del par, en la ficha del bono en Yahoo Finance.'},
+      {k:'coupon', label:'Tasa cupón anual', type:'num', req:true, unit:'%', placeholder:'4.5', ex:4.5, src:'Tasa cupón (coupon rate) en la ficha del bono en Yahoo Finance.'},
+      {k:'couponFreq', label:'Pagos por año', type:'select', options:[['2','Semestral (2)'],['1','Anual (1)'],['4','Trimestral (4)']], ex:'2', src:'Frecuencia de pago (coupon frequency) en la ficha del bono. Los bonos del Tesoro de EE.UU. pagan semestralmente.'},
+      {k:'maturity', label:'Años al vencimiento', type:'num', req:true, unit:'años', placeholder:'10', ex:10, src:'Diferencia entre la fecha de vencimiento (maturity date) en Yahoo Finance y la fecha actual.'},
+      {k:'marketRate', label:'Tasa de mercado / requerida', type:'num', req:true, unit:'%', placeholder:'4.8', ex:4.8, note:'Rendimiento exigido por el mercado', src:'Rendimiento de bonos comparables (yield) de igual plazo y riesgo, según la curva de tasas en Yahoo Finance.'},
+      {k:'rating', label:'Calificación crediticia', type:'select', options:[['AAA','AAA'],['AA','AA'],['A','A'],['BBB','BBB'],['BB','BB'],['B','B'],['CCC','CCC o inferior']], ex:'AA', src:'Calificación crediticia (credit rating) del emisor, indicada en la ficha del bono en Yahoo Finance.'},
+      {k:'inflation', label:'Inflación esperada', type:'num', unit:'%', placeholder:'3.0', ex:3.0, note:'Para rendimiento real', src:'Inflación esperada (expected inflation); se usa para calcular el rendimiento real (real yield).'},
     ]
   },
   divisa: {
@@ -364,15 +364,15 @@ const MARKETS = {
     desc:'Mercado cambiario. Analiza un par de divisas con su tipo de cambio, diferencial de tasas y datos macro.',
     formDesc:'Ingresa los datos del par de divisas (base/cotizada). El diferencial de tasas es clave para el análisis de carry.',
     fields:[
-      {k:'ticker', label:'Par de divisas', type:'text', req:true, placeholder:'Ej. EUR/USD', ex:'EUR/USD', src:'Formato base/cotizada. La primera divisa es la base, la segunda la cotizada.'},
-      {k:'price', label:'Tipo de cambio actual', type:'num', req:true, placeholder:'1.0850', ex:1.0850, src:'Cotización en tiempo real: Investing.com, XE.com, Yahoo Finanzas o tu bróker de forex.'},
-      {k:'rateBase', label:'Tasa de interés (divisa base)', type:'num', req:true, unit:'%', placeholder:'4.50', ex:4.50, src:'Tasa de política del banco central de la divisa base (ej. BCE para el euro). Ver sitio del banco central o tradingeconomics.com.'},
-      {k:'rateQuote', label:'Tasa de interés (divisa cotizada)', type:'num', req:true, unit:'%', placeholder:'5.50', ex:5.50, src:'Tasa de política del banco central de la divisa cotizada (ej. Reserva Federal para el dólar).'},
-      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'9', ex:9, src:'Volatilidad histórica del par en portales de análisis técnico (Investing.com) o volatilidad implícita de opciones de divisa.'},
-      {k:'inflationBase', label:'Inflación país base', type:'num', unit:'%', placeholder:'2.6', ex:2.6, src:'Instituto de estadística o banco central del país base. Comparativos en tradingeconomics.com.'},
-      {k:'inflationQuote', label:'Inflación país cotizado', type:'num', unit:'%', placeholder:'3.1', ex:3.1, src:'Instituto de estadística o banco central del país cotizado.'},
-      {k:'horizon', label:'Horizonte de análisis', type:'num', unit:'meses', placeholder:'12', ex:12, src:'Lo defines tú según tu objetivo de inversión.'},
-      {k:'expReturn', label:'Apreciación esperada', type:'num', unit:'%', placeholder:'2', ex:2, note:'Del par, anual', src:'Estimación propia o consenso de analistas sobre la dirección del par.'},
+      {k:'ticker', label:'Par de divisas', type:'text', req:true, placeholder:'Ej. EUR/USD', ex:'EUR/USD', src:'Par de divisas (currency pair): la primera es la base, la segunda la cotizada. Búscalo en la sección "Currencies" de Yahoo Finance.'},
+      {k:'price', label:'Tipo de cambio actual', type:'num', req:true, placeholder:'1.0850', ex:1.0850, src:'Tipo de cambio (exchange rate) en la ficha del par en la sección "Currencies" de Yahoo Finance.'},
+      {k:'rateBase', label:'Tasa de interés (divisa base)', type:'num', req:true, unit:'%', placeholder:'4.50', ex:4.50, src:'Tasa de interés de referencia (policy rate) de la divisa base; en Yahoo Finance se aproxima con el rendimiento del bono soberano a 1 año (sección "Bonds").'},
+      {k:'rateQuote', label:'Tasa de interés (divisa cotizada)', type:'num', req:true, unit:'%', placeholder:'5.50', ex:5.50, src:'Tasa de interés de referencia (policy rate) de la divisa cotizada; se aproxima con el rendimiento del bono soberano a 1 año en Yahoo Finance.'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'9', ex:9, src:'Volatilidad histórica (historical volatility): se estima de la desviación estándar de los retornos del gráfico del par en Yahoo Finance.'},
+      {k:'inflationBase', label:'Inflación país base', type:'num', unit:'%', placeholder:'2.6', ex:2.6, src:'Inflación (inflation rate) del país de la divisa base, según los indicadores macro disponibles en Yahoo Finance.'},
+      {k:'inflationQuote', label:'Inflación país cotizado', type:'num', unit:'%', placeholder:'3.1', ex:3.1, src:'Inflación (inflation rate) del país de la divisa cotizada, según los indicadores macro disponibles en Yahoo Finance.'},
+      {k:'horizon', label:'Horizonte de análisis', type:'num', unit:'meses', placeholder:'12', ex:12, src:'Horizonte de inversión (investment horizon): lo defines tú según tu objetivo.'},
+      {k:'expReturn', label:'Apreciación esperada', type:'num', unit:'%', placeholder:'2', ex:2, note:'Del par, anual', src:'Apreciación esperada (expected appreciation): estimación propia sobre la dirección del par.'},
     ]
   },
   futuro: {
@@ -380,16 +380,16 @@ const MARKETS = {
     desc:'Contratos de futuros sobre materias primas, índices o activos. Evalúa base, apalancamiento y curva.',
     formDesc:'Ingresa los datos del contrato de futuros. El tamaño del contrato y el margen determinan el apalancamiento.',
     fields:[
-      {k:'ticker', label:'Contrato', type:'text', req:true, placeholder:'Ej. CL (Petróleo WTI)', ex:'CL WTI', src:'Símbolo del contrato de futuros (ej. CL = petróleo WTI, GC = oro, ES = S&P 500).'},
-      {k:'price', label:'Precio del futuro', type:'num', req:true, unit:'$', placeholder:'78.50', ex:78.50, src:'Cotización del contrato en CME Group, Investing.com o tu bróker de futuros.'},
-      {k:'spot', label:'Precio spot (contado)', type:'num', req:true, unit:'$', placeholder:'77.20', ex:77.20, src:'Precio al contado del subyacente (ej. precio actual del petróleo) en portales de materias primas.'},
-      {k:'contractSize', label:'Tamaño del contrato', type:'num', req:true, unit:'unid.', placeholder:'1000', ex:1000, note:'Unidades del subyacente', src:'Especificaciones del contrato en el sitio de la bolsa (ej. CME Group). El petróleo WTI = 1,000 barriles.'},
-      {k:'margin', label:'Margen inicial requerido', type:'num', req:true, unit:'$', placeholder:'6500', ex:6500, src:'Especificaciones de margen de la bolsa (CME) o tu bróker de futuros.'},
-      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'33', ex:33, src:'Volatilidad histórica del subyacente o índice de volatilidad asociado (ej. OVX para el petróleo).'},
-      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'90', ex:90, src:'Diferencia entre la fecha de vencimiento del contrato (en las especificaciones) y hoy.'},
-      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', unit:'%', placeholder:'5.0', ex:5.0, src:'Rendimiento de las letras del Tesoro de EE.UU. a corto plazo (T-bills), en Investing.com o la Fed.'},
-      {k:'storageCost', label:'Costo de almacenamiento/acarreo', type:'num', unit:'%', placeholder:'1.5', ex:1.5, note:'Anual, si aplica', src:'Estimación según el tipo de materia prima (relevante en commodities físicas). Cero para índices financieros.'},
-      {k:'expReturn', label:'Movimiento esperado', type:'num', unit:'%', placeholder:'5', ex:5, note:'Del subyacente, anual', src:'Estimación propia sobre la dirección del subyacente.'},
+      {k:'ticker', label:'Contrato', type:'text', req:true, placeholder:'Ej. CL (Petróleo WTI)', ex:'CL WTI', src:'Símbolo del contrato (futures symbol) en la sección "Futures" de Yahoo Finance (ej. CL=F petróleo WTI, GC=F oro).'},
+      {k:'price', label:'Precio del futuro', type:'num', req:true, unit:'$', placeholder:'78.50', ex:78.50, src:'Precio del futuro (futures price) en la ficha del contrato en la sección "Futures" de Yahoo Finance.'},
+      {k:'spot', label:'Precio spot (contado)', type:'num', req:true, unit:'$', placeholder:'77.20', ex:77.20, src:'Precio al contado (spot price) del subyacente, consultable en Yahoo Finance.'},
+      {k:'contractSize', label:'Tamaño del contrato', type:'num', req:true, unit:'unid.', placeholder:'1000', ex:1000, note:'Unidades del subyacente', src:'Tamaño del contrato (contract size) en las especificaciones de la ficha del futuro en Yahoo Finance. El petróleo WTI = 1,000 barriles.'},
+      {k:'margin', label:'Margen inicial requerido', type:'num', req:true, unit:'$', placeholder:'6500', ex:6500, src:'Margen inicial (initial margin) requerido, indicado por tu bróker de futuros.'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'33', ex:33, src:'Volatilidad histórica (historical volatility) del subyacente, estimable del gráfico del contrato en Yahoo Finance.'},
+      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'90', ex:90, src:'Diferencia entre la fecha de vencimiento (expiration date) del contrato en Yahoo Finance y hoy.'},
+      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', unit:'%', placeholder:'5.0', ex:5.0, src:'Tasa libre de riesgo (risk-free rate): rendimiento de las letras del Tesoro de EE.UU. a corto plazo (T-bills) en la sección "Bonds" de Yahoo Finance.'},
+      {k:'storageCost', label:'Costo de almacenamiento/acarreo', type:'num', unit:'%', placeholder:'1.5', ex:1.5, note:'Anual, si aplica', src:'Costo de acarreo (cost of carry): estimación según la materia prima física. Cero para índices financieros.'},
+      {k:'expReturn', label:'Movimiento esperado', type:'num', unit:'%', placeholder:'5', ex:5, note:'Del subyacente, anual', src:'Movimiento esperado (expected move): estimación propia sobre la dirección del subyacente.'},
     ]
   },
   derivado: {
@@ -397,15 +397,15 @@ const MARKETS = {
     desc:'Opciones financieras. Valora una opción con el modelo Black-Scholes y analiza sus sensibilidades (griegas).',
     formDesc:'Ingresa los datos de la opción. Con ellos se calcula su valor teórico (Black-Scholes) y las griegas.',
     fields:[
-      {k:'ticker', label:'Opción (subyacente)', type:'text', req:true, placeholder:'Ej. AAPL Call', ex:'AAPL Call', src:'Subyacente y tipo de opción (ej. "AAPL Call 190").'},
-      {k:'optType', label:'Tipo de opción', type:'select', req:true, options:[['call','Call (compra)'],['put','Put (venta)']], ex:'call', src:'Call = derecho a comprar; Put = derecho a vender. Lo define el contrato.'},
-      {k:'spot', label:'Precio del subyacente (S)', type:'num', req:true, unit:'$', placeholder:'185', ex:185, src:'Precio actual de la acción o activo subyacente (Yahoo Finanzas, tu bróker).'},
-      {k:'strike', label:'Precio de ejercicio (K)', type:'num', req:true, unit:'$', placeholder:'190', ex:190, src:'Cadena de opciones (option chain) del subyacente en tu bróker o Yahoo Finanzas (pestaña "Options").'},
-      {k:'price', label:'Prima de mercado (opcional)', type:'num', unit:'$', placeholder:'8.45', ex:8.45, note:'Para comparar con el valor teórico', src:'Precio de la opción en la cadena de opciones (columna "Last" o "Bid/Ask").'},
-      {k:'volatility', label:'Volatilidad implícita', type:'num', req:true, unit:'%', placeholder:'28', ex:28, src:'Columna "Implied Volatility (IV)" en la cadena de opciones de tu bróker o Yahoo Finanzas.'},
-      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'60', ex:60, src:'Diferencia entre la fecha de expiración de la opción y hoy.'},
-      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', req:true, unit:'%', placeholder:'5.0', ex:5.0, src:'Rendimiento de letras del Tesoro de EE.UU. a corto plazo (T-bills), en Investing.com o la Fed.'},
-      {k:'dividend', label:'Rendimiento por dividendos', type:'num', unit:'%', placeholder:'0.5', ex:0.5, note:'Del subyacente, anual', src:'Dividend yield del subyacente en Yahoo Finanzas. Cero si no reparte dividendos.'},
+      {k:'ticker', label:'Opción (subyacente)', type:'text', req:true, placeholder:'Ej. AAPL Call', ex:'AAPL Call', src:'Subyacente (underlying) y tipo de opción, desde la pestaña "Options" del activo en Yahoo Finance.'},
+      {k:'optType', label:'Tipo de opción', type:'select', req:true, options:[['call','Call (compra)'],['put','Put (venta)']], ex:'call', src:'Tipo de opción (option type): Call (opción de compra) o Put (opción de venta), según la cadena de opciones en Yahoo Finance.'},
+      {k:'spot', label:'Precio del subyacente (S)', type:'num', req:true, unit:'$', placeholder:'185', ex:185, src:'Precio del subyacente (spot price, S) en la cabecera del activo en Yahoo Finance.'},
+      {k:'strike', label:'Precio de ejercicio (K)', type:'num', req:true, unit:'$', placeholder:'190', ex:190, src:'Precio de ejercicio (strike price, K) en la cadena de opciones (option chain), pestaña "Options" en Yahoo Finance.'},
+      {k:'price', label:'Prima de mercado (opcional)', type:'num', unit:'$', placeholder:'8.45', ex:8.45, note:'Para comparar con el valor teórico', src:'Prima de mercado (market premium): columna "Last Price" en la cadena de opciones (option chain) en Yahoo Finance.'},
+      {k:'volatility', label:'Volatilidad implícita', type:'num', req:true, unit:'%', placeholder:'28', ex:28, src:'Volatilidad implícita (implied volatility, IV): columna "Implied Volatility" en la cadena de opciones en Yahoo Finance.'},
+      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'60', ex:60, src:'Diferencia entre la fecha de expiración (expiration date) de la opción en Yahoo Finance y hoy.'},
+      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', req:true, unit:'%', placeholder:'5.0', ex:5.0, src:'Tasa libre de riesgo (risk-free rate): rendimiento de las letras del Tesoro de EE.UU. (T-bills) en la sección "Bonds" de Yahoo Finance.'},
+      {k:'dividend', label:'Rendimiento por dividendos', type:'num', unit:'%', placeholder:'0.5', ex:0.5, note:'Del subyacente, anual', src:'Rendimiento por dividendos (dividend yield) del subyacente en Yahoo Finance. Cero si no reparte.'},
     ]
   },
 };
@@ -552,7 +552,7 @@ function analyzeAccion(d){
 
   // Dividend yield
   const divYield = div>0 ? div/price*100 : 0;
-  if(div>0) formulas.push(F('Rendimiento por dividendo','Ingreso','Yield = Dividendo anual / Precio × 100', divYield, '%',
+  if(div>0) formulas.push(F('Rendimiento por dividendo (dividend yield)','Ingreso','Yield = Dividendo anual / Precio × 100', divYield, '%',
     'Retorno anual por dividendos respecto al precio actual.',
     divYield>3?'Rendimiento por dividendo atractivo para inversores que buscan ingresos.':'Rendimiento por dividendo modesto; el retorno dependería más de la apreciación del precio.'));
 
@@ -574,7 +574,7 @@ function analyzeAccion(d){
 
   // Sharpe (aprox con vol)
   const sharpe = vol>0 ? (er-rf)/vol : null;
-  if(sharpe!=null) formulas.push(F('Ratio de Sharpe','Riesgo','S = (R − Rf) / σ', sharpe, '',
+  if(sharpe!=null) formulas.push(F('Ratio de Sharpe (Sharpe ratio)','Riesgo','S = (R − Rf) / σ', sharpe, '',
     'Rentabilidad excedente por unidad de riesgo total (volatilidad).',
     sharpe>1?'Excelente relación rentabilidad-riesgo (Sharpe > 1).':sharpe>0.5?'Relación rentabilidad-riesgo aceptable.':sharpe>0?'Relación rentabilidad-riesgo baja: poco premio por el riesgo asumido.':'Sharpe negativo: la rentabilidad esperada no supera la tasa libre de riesgo.'));
 
@@ -584,7 +584,7 @@ function analyzeAccion(d){
     d.roe>15?'ROE sólido: la empresa genera buen retorno sobre el capital propio.':'ROE moderado o bajo: revisar la eficiencia en el uso del capital.'));
 
   // Apalancamiento
-  if(d.debtEquity!=null) formulas.push(F('Razón Deuda/Patrimonio','Solvencia','D/E = Deuda total / Patrimonio', d.debtEquity, 'veces',
+  if(d.debtEquity!=null) formulas.push(F('Razón Deuda/Patrimonio (debt-to-equity)','Solvencia','D/E = Deuda total / Patrimonio', d.debtEquity, 'veces',
     'Grado de apalancamiento financiero de la empresa.',
     d.debtEquity<1?'Estructura de capital conservadora.':d.debtEquity<2?'Apalancamiento moderado.':'Apalancamiento elevado: mayor riesgo financiero ante caídas de ingresos o subidas de tasas.'));
 
@@ -599,11 +599,11 @@ function analyzeAccion(d){
   // Factores de riesgo (0=bueno,100=malo)
   const riskFactors=[];
   riskFactors.push(RF('Volatilidad', Math.min(100, vol/0.5), `Volatilidad anual de ${fmt(vol)}%. ${vol>35?'Alta: oscilaciones de precio pronunciadas.':vol>20?'Media: típica de renta variable.':'Baja para una acción.'}`));
-  riskFactors.push(RF('Riesgo de mercado (β)', Math.min(100, beta*45), `Beta de ${fmt(beta)}. ${beta>1.3?'Amplifica los movimientos del mercado.':beta>0.8?'Se mueve en línea con el mercado.':'Menos sensible que el mercado.'}`));
+  riskFactors.push(RF('Riesgo de mercado (systematic risk, β)', Math.min(100, beta*45), `Beta de ${fmt(beta)}. ${beta>1.3?'Amplifica los movimientos del mercado.':beta>0.8?'Se mueve en línea con el mercado.':'Menos sensible que el mercado.'}`));
   if(per!=null) riskFactors.push(RF('Valoración (P/E)', Math.min(100, Math.max(0,(per-10)*3.3)), `P/E de ${fmt(per)}×. ${per>30?'Valoración exigente: vulnerable a decepciones.':per>20?'Valoración algo elevada.':'Valoración contenida.'}`));
   if(d.debtEquity!=null) riskFactors.push(RF('Apalancamiento', Math.min(100, d.debtEquity*33), `D/E de ${fmt(d.debtEquity)}. ${d.debtEquity>2?'Endeudamiento alto.':'Endeudamiento manejable.'}`));
   const capmGap = capm-er; // positivo = no compensa
-  riskFactors.push(RF('Premio vs. CAPM', Math.min(100, Math.max(0, 50+capmGap*8)), capmGap<=0?`Compensa su riesgo sistemático (+${fmt(-capmGap)}% sobre lo requerido).`:`No compensa del todo su riesgo (${fmt(capmGap)}% por debajo de lo requerido).`));
+  riskFactors.push(RF('Premio vs. requerido (CAPM)', Math.min(100, Math.max(0, 50+capmGap*8)), capmGap<=0?`Compensa su riesgo sistemático (+${fmt(-capmGap)}% sobre lo requerido).`:`No compensa del todo su riesgo (${fmt(capmGap)}% por debajo de lo requerido).`));
 
   return {
     kpis, formulas, riskFactors,
@@ -629,7 +629,7 @@ function analyzeBono(d){
   let pv=0;
   for(let t=1;t<=periods;t++){ pv += couponPmt/Math.pow(1+rPer,t); }
   pv += face/Math.pow(1+rPer,periods);
-  formulas.push(F('Precio teórico del bono','Valoración','P = Σ C/(1+r)ᵗ + VN/(1+r)ⁿ', pv, '$',
+  formulas.push(F('Precio teórico del bono (fair value)','Valoración','P = Σ C/(1+r)ᵗ + VN/(1+r)ⁿ', pv, '$',
     'Valor presente de todos los cupones futuros más el valor nominal, descontados a la tasa de mercado.',
     pv>cleanPrice?`El precio teórico ($${fmt(pv)}) supera el precio de mercado ($${fmt(cleanPrice)}): el bono podría estar infravalorado.`:`El precio teórico ($${fmt(pv)}) está por debajo del precio de mercado ($${fmt(cleanPrice)}): el bono podría estar caro.`));
 
@@ -641,7 +641,7 @@ function analyzeBono(d){
 
   // Rendimiento corriente
   const currentYield = (face*cpn)/cleanPrice*100;
-  formulas.push(F('Rendimiento corriente','Rendimiento','RC = Cupón anual / Precio × 100', currentYield, '%',
+  formulas.push(F('Rendimiento corriente (current yield)','Rendimiento','RC = Cupón anual / Precio × 100', currentYield, '%',
     'Retorno anual por cupones respecto al precio pagado.',
     'Mide el flujo de ingreso inmediato, sin considerar la ganancia o pérdida de capital al vencimiento.'));
 
@@ -683,8 +683,8 @@ function analyzeBono(d){
   // Riesgo crediticio por rating
   const ratingScore = {AAA:5,AA:12,A:22,BBB:38,BB:58,B:75,CCC:92}[rating] || 50;
   const riskFactors=[];
-  riskFactors.push(RF('Riesgo de tasa de interés', Math.min(100, modDur*9), `Duración modificada de ${fmt(modDur)}. ${modDur>7?'Alta sensibilidad: vulnerable a subidas de tasas.':modDur>4?'Sensibilidad media.':'Baja sensibilidad a tasas.'}`));
-  riskFactors.push(RF('Riesgo crediticio', ratingScore, `Calificación ${rating}. ${ratingScore<25?'Emisor de alta calidad, bajo riesgo de impago.':ratingScore<55?'Grado de inversión con riesgo moderado.':'Grado especulativo: mayor riesgo de incumplimiento.'}`));
+  riskFactors.push(RF('Riesgo de tasa de interés (interest rate risk)', Math.min(100, modDur*9), `Duración modificada de ${fmt(modDur)}. ${modDur>7?'Alta sensibilidad: vulnerable a subidas de tasas.':modDur>4?'Sensibilidad media.':'Baja sensibilidad a tasas.'}`));
+  riskFactors.push(RF('Riesgo crediticio (credit risk)', ratingScore, `Calificación ${rating}. ${ratingScore<25?'Emisor de alta calidad, bajo riesgo de impago.':ratingScore<55?'Grado de inversión con riesgo moderado.':'Grado especulativo: mayor riesgo de incumplimiento.'}`));
   const inflRisk = infl>0 ? Math.min(100, Math.max(0, 50 - realYield*8)) : 40;
   riskFactors.push(RF('Riesgo de inflación', inflRisk, infl>0?(realYield>0?'El rendimiento supera la inflación esperada.':'La inflación esperada supera el rendimiento: riesgo de pérdida de poder adquisitivo.'):'Inflación no especificada.'));
   const valGap = (cleanPrice-pv)/pv*100;
@@ -715,7 +715,7 @@ function analyzeDivisa(d){
 
   // Tipo de cambio forward (paridad de tasas)
   const fwd = px * (1+rQ*horizon)/(1+rB*horizon);
-  formulas.push(F('Tipo de cambio forward (PTI)','Paridad','F = S × (1+i_cot·t)/(1+i_base·t)', fwd, '',
+  formulas.push(F('Tipo de cambio forward (forward rate, PTI)','Paridad','F = S × (1+i_cot·t)/(1+i_base·t)', fwd, '',
     'Tipo de cambio teórico a futuro según la paridad de tasas de interés.',
     fwd>px?`La paridad implica una depreciación esperada de la base (forward ${fmt(fwd,4)} > spot ${fmt(px,4)}).`:`La paridad implica una apreciación esperada de la base (forward ${fmt(fwd,4)} < spot ${fmt(px,4)}).`));
 
@@ -729,7 +729,7 @@ function analyzeDivisa(d){
 
   // Retorno total esperado (apreciación + carry)
   const totalRet = er*100 + carry;
-  formulas.push(F('Retorno total esperado','Rendimiento','R = apreciación + carry', totalRet, '%',
+  formulas.push(F('Retorno total esperado (total return)','Rendimiento','R = apreciación + carry', totalRet, '%',
     'Retorno combinado por movimiento del tipo de cambio más el diferencial de tasas.',
     totalRet>0?`El retorno total esperado es positivo (${fmt(totalRet)}%): apreciación y/o carry favorecen la posición.`:`El retorno total esperado es negativo (${fmt(totalRet)}%): el carry o la depreciación esperada penalizan la posición.`));
 
@@ -747,9 +747,9 @@ function analyzeDivisa(d){
   kpis.push({lbl:'Volatilidad', val:fmtPct(vol), cls:vol>12?'r':'a'});
 
   const riskFactors=[];
-  riskFactors.push(RF('Volatilidad cambiaria', Math.min(100, vol/0.15), `Volatilidad de ${fmt(vol)}%. ${vol>12?'Alta para una divisa: movimientos amplios.':vol>7?'Media.':'Baja: par relativamente estable.'}`));
-  riskFactors.push(RF('Carry', carry>=0?Math.max(0,40-carry*8):Math.min(100,50-carry*10), carry>=0?'Carry positivo: favorece mantener la posición.':'Carry negativo: costo por mantener la posición abierta.'));
-  riskFactors.push(RF('Riesgo de paridad', Math.min(100, Math.abs((fwd-px)/px*100)*12), `La paridad de tasas implica un ajuste de ${fmt((fwd-px)/px*100)}% en el tipo de cambio.`));
+  riskFactors.push(RF('Volatilidad cambiaria (FX volatility)', Math.min(100, vol/0.15), `Volatilidad de ${fmt(vol)}%. ${vol>12?'Alta para una divisa: movimientos amplios.':vol>7?'Media.':'Baja: par relativamente estable.'}`));
+  riskFactors.push(RF('Carry (diferencial de tasas)', carry>=0?Math.max(0,40-carry*8):Math.min(100,50-carry*10), carry>=0?'Carry positivo: favorece mantener la posición.':'Carry negativo: costo por mantener la posición abierta.'));
+  riskFactors.push(RF('Riesgo de paridad (interest rate parity)', Math.min(100, Math.abs((fwd-px)/px*100)*12), `La paridad de tasas implica un ajuste de ${fmt((fwd-px)/px*100)}% en el tipo de cambio.`));
   riskFactors.push(RF('Riesgo macro (inflación)', (iB||iQ)?Math.min(100, Math.abs(iQ-iB)*100*15):45, (iB||iQ)?`Diferencial de inflación de ${fmt(Math.abs(iQ-iB)*100)}% entre ambas economías.`:'Datos de inflación no especificados.'));
 
   return {
@@ -773,7 +773,7 @@ function analyzeFuturo(d){
   // Valor nocional y apalancamiento
   const notional = fut*size;
   const leverage = notional/margin;
-  formulas.push(F('Valor nocional del contrato','Exposición','Nocional = Precio × Tamaño', notional, '$',
+  formulas.push(F('Valor nocional del contrato (notional value)','Exposición','Nocional = Precio × Tamaño', notional, '$',
     'Valor total del activo subyacente controlado por un contrato.',
     `Cada contrato controla $${fmt(notional)} de subyacente con apenas $${fmt(margin)} de margen.`));
   formulas.push(F('Apalancamiento','Exposición','L = Nocional / Margen', leverage, 'veces',
@@ -783,13 +783,13 @@ function analyzeFuturo(d){
   // Base
   const basis = fut-spot;
   const basisPct = basis/spot*100;
-  formulas.push(F('Base (futuro − spot)','Estructura','Base = F − S', basis, '$',
+  formulas.push(F('Base (basis: futuro − spot)','Estructura','Base = F − S', basis, '$',
     'Diferencia entre el precio del futuro y el precio al contado.',
     basis>0?`Base positiva (contango): el futuro cotiza ${fmt(basisPct)}% por encima del spot, reflejando costos de acarreo o expectativas alcistas.`:`Base negativa (backwardation): el futuro cotiza por debajo del spot, señal de escasez o fuerte demanda inmediata.`));
 
   // Precio teórico (cost of carry)
   const theoryF = spot*Math.exp((rf+storage)*t);
-  formulas.push(F('Precio teórico del futuro','Valoración','F = S × e^((r+c)·t)', theoryF, '$',
+  formulas.push(F('Precio teórico del futuro (fair value)','Valoración','F = S × e^((r+c)·t)', theoryF, '$',
     'Precio justo del futuro según el modelo de costo de acarreo (cost of carry).',
     Math.abs(theoryF-fut)/fut<0.02?'El futuro cotiza muy cerca de su valor teórico: mercado eficiente, sin arbitraje evidente.':theoryF>fut?`El futuro ($${fmt(fut)}) cotiza por debajo de su valor teórico ($${fmt(theoryF)}): posible oportunidad de compra.`:`El futuro ($${fmt(fut)}) cotiza por encima de su valor teórico ($${fmt(theoryF)}): podría estar sobrevalorado.`));
 
@@ -808,8 +808,8 @@ function analyzeFuturo(d){
   const riskFactors=[];
   riskFactors.push(RF('Apalancamiento', Math.min(100, leverage*5.5), `${fmt(leverage)}× de apalancamiento. ${leverage>15?'Riesgo de liquidación elevado ante movimientos adversos.':'Exposición amplificada respecto al capital.'}`));
   riskFactors.push(RF('Volatilidad', Math.min(100, vol/0.45), `Volatilidad de ${fmt(vol)}%. ${vol>30?'Alta: típica de materias primas.':'Moderada.'}`));
-  riskFactors.push(RF('Riesgo de tiempo', Math.min(100, Math.max(10, 100-days/2)), `${days} días al vencimiento. ${days<30?'Cercano al vencimiento: mayor presión de cierre/rollover.':'Plazo holgado.'}`));
-  riskFactors.push(RF('Desvío vs. valor teórico', Math.min(100, Math.abs((fut-theoryF)/theoryF*100)*10), `El futuro se desvía ${fmt((fut-theoryF)/theoryF*100)}% de su valor teórico.`));
+  riskFactors.push(RF('Riesgo de tiempo (time to expiry)', Math.min(100, Math.max(10, 100-days/2)), `${days} días al vencimiento. ${days<30?'Cercano al vencimiento: mayor presión de cierre/rollover.':'Plazo holgado.'}`));
+  riskFactors.push(RF('Desvío vs. valor teórico (mispricing)', Math.min(100, Math.abs((fut-theoryF)/theoryF*100)*10), `El futuro se desvía ${fmt((fut-theoryF)/theoryF*100)}% de su valor teórico.`));
 
   return {
     kpis, formulas, riskFactors,
@@ -844,10 +844,10 @@ function analyzeDerivado(d){
   // Valor intrínseco y temporal
   const intrinsic = isCall ? Math.max(0,S-K) : Math.max(0,K-S);
   const timeValue = bsPrice - intrinsic;
-  formulas.push(F('Valor intrínseco','Composición', isCall?'VI = máx(S − K, 0)':'VI = máx(K − S, 0)', intrinsic, '$',
+  formulas.push(F('Valor intrínseco (intrinsic value)','Composición', isCall?'VI = máx(S − K, 0)':'VI = máx(K − S, 0)', intrinsic, '$',
     'Valor que tendría la opción si se ejerciera ahora mismo.',
     intrinsic>0?`La opción está "dentro del dinero" por $${fmt(intrinsic)}.`:`La opción está "fuera del dinero": su valor es enteramente temporal.`));
-  formulas.push(F('Valor temporal','Composición','VT = Prima − Valor intrínseco', timeValue, '$',
+  formulas.push(F('Valor temporal (time value)','Composición','VT = Prima − Valor intrínseco', timeValue, '$',
     'Parte de la prima que refleja la probabilidad de que la opción gane valor antes de vencer.',
     `El valor temporal ($${fmt(timeValue)}) se erosiona conforme se acerca el vencimiento (decaimiento theta).`));
 
@@ -876,7 +876,7 @@ function analyzeDerivado(d){
 
   // Probabilidad de ejercicio (riesgo-neutral)
   const probITM = isCall ? Nd2 : Nnd2;
-  formulas.push(F('Probabilidad de terminar dentro del dinero','Probabilidad', isCall?'P ≈ N(d₂)':'P ≈ N(−d₂)', probITM*100, '%',
+  formulas.push(F('Probabilidad de terminar dentro del dinero (in the money)','Probabilidad', isCall?'P ≈ N(d₂)':'P ≈ N(−d₂)', probITM*100, '%',
     'Probabilidad (riesgo-neutral) de que la opción expire con valor.',
     probITM>0.5?`Más del 50% de probabilidad de terminar con valor (${fmt(probITM*100)}%).`:`Menos del 50% de probabilidad de terminar con valor (${fmt(probITM*100)}%): apuesta especulativa.`));
 
@@ -888,9 +888,9 @@ function analyzeDerivado(d){
 
   const moneyness = isCall ? (S/K) : (K/S);
   const riskFactors=[];
-  riskFactors.push(RF('Probabilidad de pérdida total', Math.min(100, (1-probITM)*100), `${fmt((1-probITM)*100)}% de probabilidad de expirar sin valor. Las opciones pueden perder el 100% de la prima.`));
-  riskFactors.push(RF('Decaimiento temporal', Math.min(100, Math.abs(theta)/bsPrice*100*30), `Theta de $${fmt(Math.abs(theta))}/día. El tiempo juega en contra del comprador de la opción.`));
-  riskFactors.push(RF('Sensibilidad a volatilidad', Math.min(100, vega/bsPrice*100*8), `Vega de $${fmt(vega)}. Cambios en la volatilidad implícita afectan fuertemente la prima.`));
+  riskFactors.push(RF('Probabilidad de pérdida total (max loss)', Math.min(100, (1-probITM)*100), `${fmt((1-probITM)*100)}% de probabilidad de expirar sin valor. Las opciones pueden perder el 100% de la prima.`));
+  riskFactors.push(RF('Decaimiento temporal (theta decay)', Math.min(100, Math.abs(theta)/bsPrice*100*30), `Theta de $${fmt(Math.abs(theta))}/día. El tiempo juega en contra del comprador de la opción.`));
+  riskFactors.push(RF('Sensibilidad a volatilidad (vega risk)', Math.min(100, vega/bsPrice*100*8), `Vega de $${fmt(vega)}. Cambios en la volatilidad implícita afectan fuertemente la prima.`));
   riskFactors.push(RF('Posición (moneyness)', moneyness<0.97?80:moneyness<1.0?55:moneyness<1.05?30:15, moneyness<1?'Fuera del dinero: depende de un movimiento favorable para ganar valor.':'Dentro o cerca del dinero: mayor probabilidad de retener valor.'));
 
   return {
@@ -1157,7 +1157,7 @@ function renderMonteCarlo(mc, mcCfg){
     {lbl:'Valor inicial', val:fmt(mc.initial,dec), cls:''},
     {lbl:'Valor esperado', val:fmt(mc.meanFinal,dec), cls:mc.meanFinal>=mc.initial?'g':'r'},
     {lbl:'Retorno esperado', val:fmtPct(mc.expRet), cls:mc.expRet>=0?'g':'r'},
-    {lbl:'VaR 95%', val:fmtPct(mc.var95Ret), cls:'r', sub:'Pérdida máx. probable'},
+    {lbl:'VaR 95%', val:fmtPct(mc.var95Ret), cls:'r', sub:'Valor en Riesgo (Value at Risk)'},
     {lbl:'Prob. de pérdida', val:fmtPct(mc.probLoss,0), cls:mc.probLoss>50?'r':'a'},
     {lbl:'Rango P5–P95', val:fmt(mc.p5,dec)+' – '+fmt(mc.p95,dec), cls:'b'},
   ].map(k=>`<div class="kpi"><div class="kpi-lbl">${k.lbl}</div><div class="kpi-val ${k.cls}" style="font-size:17px;">${k.val}</div>${k.sub?`<div class="kpi-sub">${k.sub}</div>`:''}</div>`).join('');
