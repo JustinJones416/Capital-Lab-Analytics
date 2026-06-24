@@ -10,6 +10,7 @@
 - [¿De qué se trata?](#de-qué-se-trata)
 - [Qué puedes hacer](#qué-puedes-hacer)
 - [Mercados que analiza](#mercados-que-analiza)
+- [La barra lateral de navegación](#la-barra-lateral-de-navegación)
 - [Cómo usar la herramienta](#cómo-usar-la-herramienta)
 - [Funciones interactivas](#funciones-interactivas)
 - [De dónde sacar los datos](#de-dónde-sacar-los-datos)
@@ -44,6 +45,7 @@ Está pensada para tres tipos de usuario: **inversores** que quieren evaluar una
 | **Escenarios interactivos** | Simula climas de mercado optimistas o pesimistas y observa el impacto |
 | **Comparar activos** | Evalúa dos activos lado a lado y descubre cuál tiene mejor perfil |
 | **Historial guardado** | Guarda análisis para retomarlos o compararlos después |
+| **Barra lateral** | Vuelve al inicio y salta a cualquier sección del análisis desde un menú siempre a mano |
 | **Dos niveles de lectura** | Explicación sencilla o vista experta, según tu conocimiento |
 | **Funciona en el celular** | Diseño adaptado a teléfonos y tabletas |
 
@@ -60,6 +62,30 @@ La herramienta se enfoca en los **dos mercados cuyos datos son más fáciles de 
 
 ---
 
+## La barra lateral de navegación
+
+CapitalLab Analytics tiene una barra lateral que acompaña en todo momento y permite moverse por la herramienta sin perder el hilo. Está organizada en dos bloques.
+
+### Navegación
+
+Accesos disponibles siempre, sin importar en qué parte de la herramienta te encuentres:
+
+| Opción | Qué hace |
+|---|---|
+| **Inicio** | Regresa a la pantalla inicial para elegir mercado y comenzar un nuevo análisis |
+| **Análisis guardados** | Lleva al listado de los análisis que guardaste, para abrirlos de nuevo o eliminarlos |
+| **Comparar activos** | Abre la vista que coloca dos análisis lado a lado y resalta cuál tiene el mejor perfil riesgo-retorno |
+
+### Análisis actual
+
+Este bloque se activa cuando hay un análisis abierto y funciona como un índice que salta directo a cada parte del informe, sin desplazarte a mano: veredicto, indicadores clave, riesgo por factores, simulación Monte Carlo, escenarios, pruebas de estrés y fórmulas. Mientras no haya un análisis abierto, aparece atenuado para indicar que estará disponible al generar o abrir uno.
+
+### En computadora y en celular
+
+En computadora, la barra permanece fija a la izquierda y siempre visible. En celular y tableta se mantiene oculta para aprovechar el espacio: se abre con el botón de menú de la esquina superior izquierda y se cierra al tocar fuera de ella, al pulsar la equis o al elegir un destino.
+
+---
+
 ## Cómo usar la herramienta
 
 1. **Elige el tipo de activo.** En la pantalla inicial, selecciona Acciones o Divisas.
@@ -72,7 +98,7 @@ La herramienta se enfoca en los **dos mercados cuyos datos son más fáciles de 
 
 4. **Lee el veredicto.** Arriba verás la recomendación (calificación A a D) con su justificación. Si lo prefieres, cambia a **"Explicación sencilla"** para una lectura en lenguaje cotidiano.
 
-5. **Explora el informe.** Revisa los indicadores clave, la medición de riesgo por factores, la simulación Monte Carlo, las pruebas de estrés y todas las fórmulas aplicadas.
+5. **Explora el informe.** Revisa los indicadores clave, la medición de riesgo por factores, la simulación Monte Carlo, las pruebas de estrés y todas las fórmulas aplicadas. Para saltar directamente a cualquiera de estas partes, usa la barra lateral.
 
 6. **Experimenta (opcional).** Usa los controles en vivo, los escenarios interactivos, guarda el análisis o compáralo con otro (ver la sección siguiente).
 

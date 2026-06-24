@@ -1,6 +1,6 @@
 # CapitalLab Analytics — Documentación Técnica
 
-**Versión:** 1.0
+**Versión:** 1.1
 **Última actualización:** Junio 2026
 **Tipo:** Aplicación web de página única (SPA), archivo HTML autocontenido.
 
@@ -42,7 +42,7 @@ El ensamblaje concatena: `styles.css` dentro de `<style>`, luego `body.html`, lu
 Pantalla 1 (mercado) → Pantalla 2 (formulario) → Pantalla 3 (resultados)
                                                         ↘ Pantalla de comparación
 ```
-La navegación se controla con `show(pageId)` y `setStep(n)`. Estado global clave: `currentMarket`, `lastResult`, `audience`, `liveData`, `scenarioState`.
+La navegación se controla con `show(pageId)` y `setStep(n)`. Una barra lateral persistente (`#sidebar`) ofrece acceso transversal a Inicio, Análisis guardados, Comparar y a las secciones del informe activo; `show()` invoca `syncSidebar(pageId)` para mantener su estado coherente con la pantalla visible (ver sección 11). Estado global clave: `currentMarket`, `lastResult`, `audience`, `liveData`, `scenarioState`.
 
 ---
 
@@ -159,14 +159,50 @@ Todas las notas de fuente (`src`) remiten únicamente a **Yahoo Finance**, con l
 
 ## 10. Compatibilidad y validación
 
-- **Responsive:** validado sin desbordamiento horizontal en 390×844 (celular) y 768×1024 (tablet).
+- **Responsive:** validado sin desbordamiento horizontal en 390×844 (celular), 768×1024 (tablet) y 1280×900 (escritorio), incluida la barra lateral (fija en escritorio, deslizable en móvil).
 - **Sin almacenamiento de sesión salvo el historial:** solo se usa localStorage para los análisis guardados.
-- **Pruebas:** 12 pruebas funcionales (dos mercados, controles en vivo, escenarios, guardado, historial, comparación) más verificación numérica independiente, sin errores de consola.
+- **Pruebas:** pruebas funcionales de los dos mercados, controles en vivo, escenarios, guardado, historial, comparación y navegación por barra lateral (apertura, cierre y bloqueo de secciones), más verificación numérica independiente, sin errores de consola.
 
 ### Supuestos del modelo (documentados)
 - CAPM con tasa libre de riesgo fija (4.5%) y prima de mercado fija (5.5%).
 - Monte Carlo bajo movimiento browniano geométrico.
 - Mejora futura posible: permitir editar estos supuestos.
+
+---
+
+## 11. Barra lateral de navegación
+
+Capa de navegación persistente que coexiste con el sistema de pantallas (`page-market`, `page-form`, `page-results`, `page-compare`) sin sustituirlo.
+
+### Estructura del DOM
+
+El cuerpo se reorganiza en un contenedor flex `.shell` con dos hijos: `<aside class="sidebar" id="sidebar">` y el `<div class="wrap">` que conserva todo el contenido previo. Antes del `.shell` se inserta `.nav-backdrop` (capa oscura para móvil) y en la barra superior se añade el botón `#nav-toggle`. La barra contiene dos grupos:
+
+| Grupo | Contenido | Estado inicial |
+|---|---|---|
+| `.nav-group` (navegación) | `#nav-home`, `#nav-history`, `#nav-compare` | Siempre activo |
+| `.nav-group.nav-sections` (`#nav-sections`) | Anclas a las secciones del informe | Clase `locked` |
+
+### Comportamiento responsive
+
+| Ancho | Comportamiento |
+|---|---|
+| ≥ 901px | Columna fija de 230px, `position:sticky` bajo la barra superior. El botón `#nav-toggle` se oculta. |
+| ≤ 900px | `position:fixed`, fuera de pantalla mediante `translateX(-100%)`. La clase `.open` la despliega; aparecen el botón de menú y el backdrop. |
+
+La altura en móvil usa la variable `--vh`, recalculada por `setVH()` en cada `resize`, para evitar el problema del `100vh` con la barra de direcciones del navegador móvil.
+
+### Lógica JavaScript
+
+- `toggleSidebar()`, `openSidebar()`, `closeSidebar()`: controlan la apertura en móvil junto con el backdrop.
+- `navHome()`, `navHistory()`, `navCompare()`: reutilizan las funciones de navegación existentes (`goToMarket`, `openCompare`) y delegan en `afterNav()`.
+- `navSection(id)`: valida que `page-results` esté visible; si lo está, hace `scrollIntoView` sobre la tarjeta `.card` que contiene el elemento objetivo; si no, emite un `toast`.
+- `afterNav(activeId)`: limpia el estado activo, marca el ítem pulsado y, en móvil, cierra la barra.
+- `syncSidebar(page)`: invocada dentro de `show()`, alterna la clase `locked` del grupo de secciones según la pantalla activa y sincroniza el ítem resaltado.
+
+### Cambio colateral
+
+La función `show()` se amplió para incluir `page-compare` en el conjunto de pantallas que se ocultan al cambiar de vista, corrigiendo una inconsistencia previa por la que esa sección podía permanecer visible.
 
 ---
 
