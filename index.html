@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
+<html lang="es"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>CapitalLab Analytics — Mesa de Análisis de Inversión</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,9 +178,60 @@ table.data tr:last-child td{border-bottom:none;}
 .aud-toggle button{padding:6px 14px;border-radius:30px;border:none;background:transparent;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all .15s;}
 .aud-toggle button.active{background:var(--accent);color:#04121d;}
 
-</style>
-</head>
-<body>
+/* ───── COMPONENTES INTERACTIVOS NUEVOS ───── */
+.result-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.btn-sm{padding:8px 13px;font-size:12.5px;}
+@media(max-width:560px){.result-actions{width:100%;}.result-actions .btn-sm{flex:1;justify-content:center;}}
+
+/* Controles en vivo */
+.live-panel{border-color:var(--accent);background:linear-gradient(180deg,rgba(0,196,255,.05),var(--c1));}
+.live-sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:6px;}
+.lslider{}
+.lslider-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;}
+.lslider-label{font-size:12.5px;color:var(--t2);font-weight:500;}
+.lslider-val{font-family:var(--font-mono);font-size:14px;color:var(--accent);font-weight:500;}
+.lslider input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:var(--c3);outline:none;}
+.lslider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px rgba(0,196,255,.18);transition:transform .1s;}
+.lslider input[type=range]::-webkit-slider-thumb:active{transform:scale(1.2);}
+.lslider input[type=range]::-moz-range-thumb{width:18px;height:18px;border:none;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px rgba(0,196,255,.18);}
+.lslider-range{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);font-family:var(--font-mono);margin-top:3px;}
+
+/* Historial */
+.history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.hist-card{background:var(--c1);border:1px solid var(--c3);border-radius:var(--r2);padding:16px;position:relative;transition:all .18s;cursor:pointer;}
+.hist-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.hist-grade{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-family:var(--font-head);font-weight:800;font-size:17px;}
+.hist-name{font-weight:600;font-size:15px;margin-bottom:3px;padding-right:42px;}
+.hist-market{font-size:11px;color:var(--t3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.hist-metrics{display:flex;gap:14px;font-size:12px;color:var(--t2);}
+.hist-metrics b{font-family:var(--font-mono);color:var(--t1);font-weight:500;}
+.hist-date{font-size:10px;color:var(--t3);margin-top:10px;}
+.hist-del{position:absolute;bottom:12px;right:12px;color:var(--t3);font-size:15px;cursor:pointer;transition:color .15s;}
+.hist-del:hover{color:var(--red);}
+
+/* Escenarios interactivos */
+.scenario-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:6px 0 18px;}
+.scenario-readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
+.sc-stat{background:var(--bg2);border:1px solid var(--c3);border-radius:var(--r2);padding:14px;text-align:center;}
+.sc-stat-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+.sc-stat-val{font-family:var(--font-mono);font-size:19px;font-weight:500;}
+
+/* Comparación */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:680px){.compare-grid{grid-template-columns:1fr;}}
+.cmp-col{background:var(--c1);border:1px solid var(--c3);border-radius:var(--r3);padding:20px;}
+.cmp-col.winner{border-color:var(--green);box-shadow:0 0 0 1px rgba(0,208,132,.3);}
+.cmp-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--c3);}
+.cmp-name{font-family:var(--font-head);font-weight:700;font-size:16px;}
+.cmp-grade{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-family:var(--font-head);font-weight:800;font-size:20px;}
+.cmp-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;border-bottom:1px solid var(--c2);}
+.cmp-row:last-child{border-bottom:none;}
+.cmp-row .l{color:var(--t2);}
+.cmp-row .v{font-family:var(--font-mono);font-weight:500;}
+.cmp-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px;}
+.cmp-badge{display:inline-block;font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:10px;background:rgba(0,208,132,.15);color:var(--green);margin-top:8px;}
+
+</style></head><body>
 <div class="topbar">
   <div class="brand">CapitalLab<span class="dot">.</span>Analytics <span class="brand-sub">Mesa de Análisis</span></div>
   <div class="topbar-spacer"></div>
@@ -210,8 +259,14 @@ table.data tr:last-child td{border-bottom:none;}
     <div class="section-label">Elige el tipo de activo a analizar</div>
     <div class="market-grid" id="market-grid"></div>
 
+    <!-- Historial guardado -->
+    <div id="history-section" class="hidden">
+      <div class="section-label">Tus análisis guardados</div>
+      <div class="history-grid" id="history-grid"></div>
+    </div>
+
     <div class="info-box" style="margin-top:24px;">
-      <b>¿Cómo funciona?</b> Selecciona un mercado, ingresa los datos del activo (puedes cargar un ejemplo para ver el formato), y obtén un informe completo con fórmulas, simulación Monte Carlo, medición de riesgo y una recomendación fundamentada. La herramienta está diseñada para datos reales de mercado.
+      <b>¿Cómo funciona?</b> Selecciona un mercado, ingresa los datos del activo (puedes cargar un ejemplo para ver el formato) y obtén un informe completo con fórmulas, simulación Monte Carlo, medición de riesgo y una recomendación fundamentada. Puedes ajustar variables en vivo, comparar dos activos y guardar tus análisis. Diseñada para datos reales de mercado.
     </div>
   </section>
 
@@ -232,7 +287,7 @@ table.data tr:last-child td{border-bottom:none;}
       </div>
     </div>
     <div class="info-box warn">
-      <b>Sobre los datos:</b> ingresa información real obtenida de fuentes confiables. Debajo de cada campo encontrarás <b>dónde ubicar el dato</b> (estados financieros, portales de mercado, bancos centrales). La calidad del análisis depende directamente de la calidad de los datos ingresados.
+      <b>Sobre los datos:</b> ingresa información real obtenida de fuentes confiables. Debajo de cada campo encontrarás <b>dónde ubicar el dato</b> en Yahoo Finance. La calidad del análisis depende directamente de la calidad de los datos ingresados.
     </div>
   </section>
 
@@ -241,12 +296,25 @@ table.data tr:last-child td{border-bottom:none;}
 
     <div class="panel-head" style="margin-bottom:18px;">
       <div class="panel-title"><i class="ti ti-report-analytics"></i> <span id="result-asset-name">Análisis</span></div>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <div class="result-actions">
         <div class="aud-toggle" id="aud-toggle">
-          <button data-aud="simple" onclick="setAudience('simple')">Explicación sencilla</button>
-          <button data-aud="expert" class="active" onclick="setAudience('expert')">Vista experta</button>
+          <button data-aud="simple" onclick="setAudience('simple')">Sencilla</button>
+          <button data-aud="expert" class="active" onclick="setAudience('expert')">Experta</button>
         </div>
-        <button class="btn btn-ghost" onclick="goToForm()"><i class="ti ti-pencil"></i> Editar datos</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleLiveControls()" id="btn-live"><i class="ti ti-adjustments"></i> Ajustar en vivo</button>
+        <button class="btn btn-ghost btn-sm" onclick="saveCurrentAnalysis()"><i class="ti ti-device-floppy"></i> Guardar</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCompare()"><i class="ti ti-git-compare"></i> Comparar</button>
+        <button class="btn btn-ghost btn-sm" onclick="goToForm()"><i class="ti ti-pencil"></i> Editar</button>
+      </div>
+    </div>
+
+    <!-- Panel de controles en vivo -->
+    <div class="card live-panel hidden" id="live-panel">
+      <div class="card-title"><i class="ti ti-adjustments-horizontal"></i> Controles en vivo</div>
+      <div class="card-sub">Mueve los deslizadores y observa cómo cambian el veredicto, el riesgo y las proyecciones al instante. Ideal para explorar escenarios "¿qué pasaría si...?".</div>
+      <div class="live-sliders" id="live-sliders"></div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="resetLiveControls()"><i class="ti ti-restore"></i> Restaurar valores originales</button>
       </div>
     </div>
 
@@ -259,22 +327,30 @@ table.data tr:last-child td{border-bottom:none;}
 
     <!-- Riesgo por factores -->
     <div class="card">
-      <div class="card-title"><i class="ti ti-shield-half"></i> Medición de riesgo por factores (risk assessment)</div>
+      <div class="card-title"><i class="ti ti-shield-half"></i> Medición de riesgo por factores</div>
       <div class="card-sub">Cada factor se evalúa de 0 (favorable) a 100 (desfavorable). El puntaje global combina todos los factores ponderados según el tipo de activo.</div>
       <div class="riskfactors" id="risk-factors"></div>
     </div>
 
     <!-- Monte Carlo -->
     <div class="card">
-      <div class="card-title"><i class="ti ti-chart-histogram"></i> Simulación Monte Carlo (Monte Carlo simulation)</div>
-      <div class="card-sub" id="mc-sub">Proyección de <span id="mc-n">10,000</span> escenarios posibles del valor del activo en el horizonte definido, según su rentabilidad esperada (expected return) y su volatilidad (volatility).</div>
+      <div class="card-title"><i class="ti ti-chart-histogram"></i> Simulación Monte Carlo</div>
+      <div class="card-sub" id="mc-sub">Proyección de <span id="mc-n">10,000</span> escenarios posibles del valor del activo en el horizonte definido, según su rentabilidad esperada y su volatilidad.</div>
       <div class="chart-box"><canvas id="mc-chart"></canvas></div>
       <div class="kpi-grid" id="mc-kpis" style="margin-top:18px;margin-bottom:0;"></div>
     </div>
 
+    <!-- Escenarios interactivos -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-arrows-shuffle"></i> Escenarios interactivos</div>
+      <div class="card-sub">Ajusta los supuestos clave y observa cómo se transforma el rango de resultados proyectado. Explora el impacto del optimismo o el pesimismo sobre tu tesis de inversión.</div>
+      <div class="scenario-controls" id="scenario-controls"></div>
+      <div class="scenario-readout" id="scenario-readout"></div>
+    </div>
+
     <!-- Pruebas / escenarios -->
     <div class="card">
-      <div class="card-title"><i class="ti ti-test-pipe"></i> Pruebas de estrés y escenarios (stress testing)</div>
+      <div class="card-title"><i class="ti ti-test-pipe"></i> Pruebas de estrés y escenarios</div>
       <div class="card-sub">Cómo se comportaría la inversión bajo condiciones adversas y favorables.</div>
       <div class="tbl-scroll"><table class="data" id="stress-table"></table></div>
     </div>
@@ -295,6 +371,16 @@ table.data tr:last-child td{border-bottom:none;}
       <button class="btn btn-ghost" onclick="goToMarket()"><i class="ti ti-refresh"></i> Analizar otro activo</button>
       <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> Exportar / Imprimir</button>
     </div>
+  </section>
+
+  <!-- ░░░ COMPARACIÓN ░░░ -->
+  <section id="page-compare" class="hidden">
+    <div class="panel-head" style="margin-bottom:18px;">
+      <div class="panel-title"><i class="ti ti-git-compare"></i> Comparación de activos</div>
+      <button class="btn btn-ghost btn-sm" onclick="goToResultsFromCompare()"><i class="ti ti-arrow-left"></i> Volver</button>
+    </div>
+    <div class="info-box" id="compare-info">Selecciona un segundo análisis guardado para compararlo con el actual.</div>
+    <div class="compare-grid" id="compare-grid"></div>
   </section>
 
 </div>
@@ -329,34 +415,18 @@ const MARKETS = {
     desc:'Renta variable. Analiza una acción a partir de su precio, fundamentales y volatilidad.',
     formDesc:'Ingresa los datos de la acción. Los campos marcados con * son indispensables; los demás enriquecen el análisis fundamental.',
     fields:[
-      {k:'ticker', label:'Símbolo / Nombre', type:'text', req:true, placeholder:'Ej. AAPL', ex:'AAPL', src:'Símbolo bursátil de la empresa (ticker), visible en el buscador de Yahoo Finance.'},
-      {k:'price', label:'Precio actual', type:'num', req:true, unit:'$', placeholder:'185.00', ex:185, src:'Cotización en tiempo real (market price) en la cabecera de la acción en Yahoo Finance.'},
-      {k:'shares', label:'Acciones en circulación', type:'num', unit:'mill.', placeholder:'15500', ex:15500, note:'En millones', src:'Pestaña "Statistics" en Yahoo Finance, campo "Shares Outstanding" (acciones en circulación).'},
-      {k:'eps', label:'Utilidad por acción (EPS)', type:'num', unit:'$', placeholder:'6.13', ex:6.13, src:'Cabecera de la acción en Yahoo Finance, campo "EPS (TTM)" (utilidad por acción de los últimos doce meses).'},
-      {k:'bookValue', label:'Valor en libros por acción', type:'num', unit:'$', placeholder:'4.40', ex:4.40, src:'Pestaña "Statistics" en Yahoo Finance, campo "Book Value Per Share" (valor en libros por acción).'},
-      {k:'dividend', label:'Dividendo anual por acción', type:'num', unit:'$', placeholder:'0.96', ex:0.96, src:'Cabecera de la acción en Yahoo Finance, campo "Forward Dividend" (dividendo anual proyectado). Cero si no reparte.'},
-      {k:'epsGrowth', label:'Crecimiento esperado de utilidades', type:'num', unit:'%', placeholder:'10', ex:10, note:'Anual estimado', src:'Pestaña "Analysis" en Yahoo Finance, sección "Growth Estimates" (estimaciones de crecimiento).'},
-      {k:'beta', label:'Beta', type:'num', placeholder:'1.25', ex:1.25, note:'Sensibilidad al mercado', src:'Pestaña "Statistics" en Yahoo Finance, campo "Beta (5Y Monthly)" (coeficiente de riesgo sistemático).'},
-      {k:'volatility', label:'Volatilidad anual', type:'num', unit:'%', req:true, placeholder:'28', ex:28, src:'Volatilidad histórica (historical volatility): se estima de la desviación estándar de los retornos del gráfico de precios en Yahoo Finance, o se aproxima con la volatilidad implícita de la pestaña "Options".'},
-      {k:'expReturn', label:'Rentabilidad esperada anual', type:'num', unit:'%', req:true, placeholder:'12', ex:12, src:'Se deduce del precio objetivo (price target) de la pestaña "Analysis" en Yahoo Finance frente al precio actual.'},
-      {k:'debtEquity', label:'Razón Deuda/Patrimonio', type:'num', placeholder:'1.45', ex:1.45, src:'Pestaña "Statistics" en Yahoo Finance, campo "Total Debt/Equity" (razón deuda-patrimonio).'},
-      {k:'roe', label:'Rentabilidad sobre patrimonio (ROE)', type:'num', unit:'%', placeholder:'18', ex:18, src:'Pestaña "Statistics" en Yahoo Finance, campo "Return on Equity" (rentabilidad sobre el patrimonio).'},
-    ]
-  },
-  bono: {
-    name:'Bonos', icon:'ti-building-bank', color:'#00d084',
-    desc:'Renta fija. Evalúa un bono soberano o corporativo por su cupón, rendimiento y sensibilidad a tasas.',
-    formDesc:'Ingresa las características del bono. El precio se expresa como porcentaje del valor nominal (par = 100).',
-    fields:[
-      {k:'ticker', label:'Nombre / Emisor', type:'text', req:true, placeholder:'Ej. Bono UST 10Y', ex:'UST 10Y', src:'Nombre del bono y su emisor (issuer). Los bonos del Tesoro figuran en la sección "Bonds" de Yahoo Finance.'},
-      {k:'faceValue', label:'Valor nominal', type:'num', req:true, unit:'$', placeholder:'1000', ex:1000, src:'Valor nominal (face value / par value) del bono. Estándar de mercado: 1,000 o 100 por unidad.'},
-      {k:'price', label:'Precio actual (% del par)', type:'num', req:true, unit:'%', placeholder:'98.5', ex:98.5, src:'Precio limpio (clean price) del bono, como porcentaje del par, en la ficha del bono en Yahoo Finance.'},
-      {k:'coupon', label:'Tasa cupón anual', type:'num', req:true, unit:'%', placeholder:'4.5', ex:4.5, src:'Tasa cupón (coupon rate) en la ficha del bono en Yahoo Finance.'},
-      {k:'couponFreq', label:'Pagos por año', type:'select', options:[['2','Semestral (2)'],['1','Anual (1)'],['4','Trimestral (4)']], ex:'2', src:'Frecuencia de pago (coupon frequency) en la ficha del bono. Los bonos del Tesoro de EE.UU. pagan semestralmente.'},
-      {k:'maturity', label:'Años al vencimiento', type:'num', req:true, unit:'años', placeholder:'10', ex:10, src:'Diferencia entre la fecha de vencimiento (maturity date) en Yahoo Finance y la fecha actual.'},
-      {k:'marketRate', label:'Tasa de mercado / requerida', type:'num', req:true, unit:'%', placeholder:'4.8', ex:4.8, note:'Rendimiento exigido por el mercado', src:'Rendimiento de bonos comparables (yield) de igual plazo y riesgo, según la curva de tasas en Yahoo Finance.'},
-      {k:'rating', label:'Calificación crediticia', type:'select', options:[['AAA','AAA'],['AA','AA'],['A','A'],['BBB','BBB'],['BB','BB'],['B','B'],['CCC','CCC o inferior']], ex:'AA', src:'Calificación crediticia (credit rating) del emisor, indicada en la ficha del bono en Yahoo Finance.'},
-      {k:'inflation', label:'Inflación esperada', type:'num', unit:'%', placeholder:'3.0', ex:3.0, note:'Para rendimiento real', src:'Inflación esperada (expected inflation); se usa para calcular el rendimiento real (real yield).'},
+      {k:'ticker', label:'Símbolo / Nombre', type:'text', req:true, placeholder:'Ej. AAPL', ex:'AAPL', src:'Símbolo bursátil de la empresa (símbolo bursátil) visible en el buscador de Yahoo Finance.'},
+      {k:'price', label:'Precio actual', type:'num', req:true, unit:'$', placeholder:'185.00', ex:185, sl:[1,1000,0.5], src:'Cotización en tiempo real (precio de mercado) en la cabecera de la acción en Yahoo Finance.'},
+      {k:'shares', label:'Acciones en circulación', type:'num', unit:'mill.', placeholder:'15500', ex:15500, note:'En millones', src:'Pestaña "Statistics" en Yahoo Finance, campo de acciones en circulación ("Shares Outstanding").'},
+      {k:'eps', label:'Utilidad por acción (EPS)', type:'num', unit:'$', placeholder:'6.13', ex:6.13, sl:[-10,50,0.1], src:'Cabecera de la acción en Yahoo Finance, campo de utilidad por acción de los últimos doce meses ("EPS (TTM)").'},
+      {k:'bookValue', label:'Valor en libros por acción', type:'num', unit:'$', placeholder:'4.40', ex:4.40, sl:[0,200,0.1], src:'Pestaña "Statistics" en Yahoo Finance, campo de valor en libros por acción ("Book Value Per Share").'},
+      {k:'dividend', label:'Dividendo anual por acción', type:'num', unit:'$', placeholder:'0.96', ex:0.96, sl:[0,50,0.05], src:'Cabecera de la acción en Yahoo Finance, campo de dividendo anual proyectado ("Forward Dividend"). Cero si no reparte.'},
+      {k:'epsGrowth', label:'Crecimiento esperado de utilidades', type:'num', unit:'%', placeholder:'10', ex:10, note:'Anual estimado', sl:[-20,40,0.5], src:'Pestaña "Analysis" en Yahoo Finance, sección de estimaciones de crecimiento ("Growth Estimates").'},
+      {k:'beta', label:'Beta', type:'num', placeholder:'1.25', ex:1.25, note:'Sensibilidad al mercado', sl:[0,3,0.05], src:'Pestaña "Statistics" en Yahoo Finance, campo del coeficiente de riesgo sistemático ("Beta (5Y Monthly)").'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', unit:'%', req:true, placeholder:'28', ex:28, sl:[5,100,1], src:'Volatilidad histórica: se estima a partir de la desviación estándar de los retornos del gráfico de precios en Yahoo Finance, o se aproxima con la volatilidad implícita de la pestaña "Options".'},
+      {k:'expReturn', label:'Rentabilidad esperada anual', type:'num', unit:'%', req:true, placeholder:'12', ex:12, sl:[-20,50,0.5], src:'Se deduce del precio objetivo de la pestaña "Analysis" en Yahoo Finance frente al precio actual.'},
+      {k:'debtEquity', label:'Razón Deuda/Patrimonio', type:'num', placeholder:'1.45', ex:1.45, sl:[0,5,0.05], src:'Pestaña "Statistics" en Yahoo Finance, campo de la razón deuda-patrimonio ("Total Debt/Equity").'},
+      {k:'roe', label:'Rentabilidad sobre patrimonio (ROE)', type:'num', unit:'%', placeholder:'18', ex:18, sl:[-20,60,0.5], src:'Pestaña "Statistics" en Yahoo Finance, campo de rentabilidad sobre el patrimonio ("Return on Equity").'},
     ]
   },
   divisa: {
@@ -364,48 +434,15 @@ const MARKETS = {
     desc:'Mercado cambiario. Analiza un par de divisas con su tipo de cambio, diferencial de tasas y datos macro.',
     formDesc:'Ingresa los datos del par de divisas (base/cotizada). El diferencial de tasas es clave para el análisis de carry.',
     fields:[
-      {k:'ticker', label:'Par de divisas', type:'text', req:true, placeholder:'Ej. EUR/USD', ex:'EUR/USD', src:'Par de divisas (currency pair): la primera es la base, la segunda la cotizada. Búscalo en la sección "Currencies" de Yahoo Finance.'},
-      {k:'price', label:'Tipo de cambio actual', type:'num', req:true, placeholder:'1.0850', ex:1.0850, src:'Tipo de cambio (exchange rate) en la ficha del par en la sección "Currencies" de Yahoo Finance.'},
-      {k:'rateBase', label:'Tasa de interés (divisa base)', type:'num', req:true, unit:'%', placeholder:'4.50', ex:4.50, src:'Tasa de interés de referencia (policy rate) de la divisa base; en Yahoo Finance se aproxima con el rendimiento del bono soberano a 1 año (sección "Bonds").'},
-      {k:'rateQuote', label:'Tasa de interés (divisa cotizada)', type:'num', req:true, unit:'%', placeholder:'5.50', ex:5.50, src:'Tasa de interés de referencia (policy rate) de la divisa cotizada; se aproxima con el rendimiento del bono soberano a 1 año en Yahoo Finance.'},
-      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'9', ex:9, src:'Volatilidad histórica (historical volatility): se estima de la desviación estándar de los retornos del gráfico del par en Yahoo Finance.'},
-      {k:'inflationBase', label:'Inflación país base', type:'num', unit:'%', placeholder:'2.6', ex:2.6, src:'Inflación (inflation rate) del país de la divisa base, según los indicadores macro disponibles en Yahoo Finance.'},
-      {k:'inflationQuote', label:'Inflación país cotizado', type:'num', unit:'%', placeholder:'3.1', ex:3.1, src:'Inflación (inflation rate) del país de la divisa cotizada, según los indicadores macro disponibles en Yahoo Finance.'},
-      {k:'horizon', label:'Horizonte de análisis', type:'num', unit:'meses', placeholder:'12', ex:12, src:'Horizonte de inversión (investment horizon): lo defines tú según tu objetivo.'},
-      {k:'expReturn', label:'Apreciación esperada', type:'num', unit:'%', placeholder:'2', ex:2, note:'Del par, anual', src:'Apreciación esperada (expected appreciation): estimación propia sobre la dirección del par.'},
-    ]
-  },
-  futuro: {
-    name:'Futuros', icon:'ti-chart-candle', color:'#ff4757',
-    desc:'Contratos de futuros sobre materias primas, índices o activos. Evalúa base, apalancamiento y curva.',
-    formDesc:'Ingresa los datos del contrato de futuros. El tamaño del contrato y el margen determinan el apalancamiento.',
-    fields:[
-      {k:'ticker', label:'Contrato', type:'text', req:true, placeholder:'Ej. CL (Petróleo WTI)', ex:'CL WTI', src:'Símbolo del contrato (futures symbol) en la sección "Futures" de Yahoo Finance (ej. CL=F petróleo WTI, GC=F oro).'},
-      {k:'price', label:'Precio del futuro', type:'num', req:true, unit:'$', placeholder:'78.50', ex:78.50, src:'Precio del futuro (futures price) en la ficha del contrato en la sección "Futures" de Yahoo Finance.'},
-      {k:'spot', label:'Precio spot (contado)', type:'num', req:true, unit:'$', placeholder:'77.20', ex:77.20, src:'Precio al contado (spot price) del subyacente, consultable en Yahoo Finance.'},
-      {k:'contractSize', label:'Tamaño del contrato', type:'num', req:true, unit:'unid.', placeholder:'1000', ex:1000, note:'Unidades del subyacente', src:'Tamaño del contrato (contract size) en las especificaciones de la ficha del futuro en Yahoo Finance. El petróleo WTI = 1,000 barriles.'},
-      {k:'margin', label:'Margen inicial requerido', type:'num', req:true, unit:'$', placeholder:'6500', ex:6500, src:'Margen inicial (initial margin) requerido, indicado por tu bróker de futuros.'},
-      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'33', ex:33, src:'Volatilidad histórica (historical volatility) del subyacente, estimable del gráfico del contrato en Yahoo Finance.'},
-      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'90', ex:90, src:'Diferencia entre la fecha de vencimiento (expiration date) del contrato en Yahoo Finance y hoy.'},
-      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', unit:'%', placeholder:'5.0', ex:5.0, src:'Tasa libre de riesgo (risk-free rate): rendimiento de las letras del Tesoro de EE.UU. a corto plazo (T-bills) en la sección "Bonds" de Yahoo Finance.'},
-      {k:'storageCost', label:'Costo de almacenamiento/acarreo', type:'num', unit:'%', placeholder:'1.5', ex:1.5, note:'Anual, si aplica', src:'Costo de acarreo (cost of carry): estimación según la materia prima física. Cero para índices financieros.'},
-      {k:'expReturn', label:'Movimiento esperado', type:'num', unit:'%', placeholder:'5', ex:5, note:'Del subyacente, anual', src:'Movimiento esperado (expected move): estimación propia sobre la dirección del subyacente.'},
-    ]
-  },
-  derivado: {
-    name:'Derivados (Opciones)', icon:'ti-diamonds', color:'#a78bfa',
-    desc:'Opciones financieras. Valora una opción con el modelo Black-Scholes y analiza sus sensibilidades (griegas).',
-    formDesc:'Ingresa los datos de la opción. Con ellos se calcula su valor teórico (Black-Scholes) y las griegas.',
-    fields:[
-      {k:'ticker', label:'Opción (subyacente)', type:'text', req:true, placeholder:'Ej. AAPL Call', ex:'AAPL Call', src:'Subyacente (underlying) y tipo de opción, desde la pestaña "Options" del activo en Yahoo Finance.'},
-      {k:'optType', label:'Tipo de opción', type:'select', req:true, options:[['call','Call (compra)'],['put','Put (venta)']], ex:'call', src:'Tipo de opción (option type): Call (opción de compra) o Put (opción de venta), según la cadena de opciones en Yahoo Finance.'},
-      {k:'spot', label:'Precio del subyacente (S)', type:'num', req:true, unit:'$', placeholder:'185', ex:185, src:'Precio del subyacente (spot price, S) en la cabecera del activo en Yahoo Finance.'},
-      {k:'strike', label:'Precio de ejercicio (K)', type:'num', req:true, unit:'$', placeholder:'190', ex:190, src:'Precio de ejercicio (strike price, K) en la cadena de opciones (option chain), pestaña "Options" en Yahoo Finance.'},
-      {k:'price', label:'Prima de mercado (opcional)', type:'num', unit:'$', placeholder:'8.45', ex:8.45, note:'Para comparar con el valor teórico', src:'Prima de mercado (market premium): columna "Last Price" en la cadena de opciones (option chain) en Yahoo Finance.'},
-      {k:'volatility', label:'Volatilidad implícita', type:'num', req:true, unit:'%', placeholder:'28', ex:28, src:'Volatilidad implícita (implied volatility, IV): columna "Implied Volatility" en la cadena de opciones en Yahoo Finance.'},
-      {k:'daysToExpiry', label:'Días al vencimiento', type:'num', req:true, unit:'días', placeholder:'60', ex:60, src:'Diferencia entre la fecha de expiración (expiration date) de la opción en Yahoo Finance y hoy.'},
-      {k:'riskFreeRate', label:'Tasa libre de riesgo', type:'num', req:true, unit:'%', placeholder:'5.0', ex:5.0, src:'Tasa libre de riesgo (risk-free rate): rendimiento de las letras del Tesoro de EE.UU. (T-bills) en la sección "Bonds" de Yahoo Finance.'},
-      {k:'dividend', label:'Rendimiento por dividendos', type:'num', unit:'%', placeholder:'0.5', ex:0.5, note:'Del subyacente, anual', src:'Rendimiento por dividendos (dividend yield) del subyacente en Yahoo Finance. Cero si no reparte.'},
+      {k:'ticker', label:'Par de divisas', type:'text', req:true, placeholder:'Ej. EUR/USD', ex:'EUR/USD', src:'Par de divisas: la primera es la base, la segunda la cotizada. Búscalo en la sección "Currencies" de Yahoo Finance.'},
+      {k:'price', label:'Tipo de cambio actual', type:'num', req:true, placeholder:'1.0850', ex:1.0850, sl:[0.1,200,0.0001], src:'Tipo de cambio en la ficha del par en la sección "Currencies" de Yahoo Finance.'},
+      {k:'rateBase', label:'Tasa de interés (divisa base)', type:'num', req:true, unit:'%', placeholder:'4.50', ex:4.50, sl:[0,25,0.05], src:'Tasa de interés de referencia de la divisa base; en Yahoo Finance se aproxima con el rendimiento del bono soberano a 1 año (sección "Bonds").'},
+      {k:'rateQuote', label:'Tasa de interés (divisa cotizada)', type:'num', req:true, unit:'%', placeholder:'5.50', ex:5.50, sl:[0,25,0.05], src:'Tasa de interés de referencia de la divisa cotizada; se aproxima con el rendimiento del bono soberano a 1 año en Yahoo Finance.'},
+      {k:'volatility', label:'Volatilidad anual', type:'num', req:true, unit:'%', placeholder:'9', ex:9, sl:[1,40,0.5], src:'Volatilidad histórica: se estima a partir de la desviación estándar de los retornos del gráfico del par en Yahoo Finance.'},
+      {k:'inflationBase', label:'Inflación país base', type:'num', unit:'%', placeholder:'2.6', ex:2.6, sl:[-2,30,0.1], src:'Inflación del país de la divisa base, según los indicadores macro disponibles en Yahoo Finance.'},
+      {k:'inflationQuote', label:'Inflación país cotizado', type:'num', unit:'%', placeholder:'3.1', ex:3.1, sl:[-2,30,0.1], src:'Inflación del país de la divisa cotizada, según los indicadores macro disponibles en Yahoo Finance.'},
+      {k:'horizon', label:'Horizonte de análisis', type:'num', unit:'meses', placeholder:'12', ex:12, sl:[1,60,1], src:'Horizonte de inversión: lo defines tú según tu objetivo.'},
+      {k:'expReturn', label:'Apreciación esperada', type:'num', unit:'%', placeholder:'2', ex:2, note:'Del par, anual', sl:[-30,30,0.5], src:'Apreciación esperada: estimación propia sobre la dirección del par.'},
     ]
   },
 };
@@ -552,7 +589,7 @@ function analyzeAccion(d){
 
   // Dividend yield
   const divYield = div>0 ? div/price*100 : 0;
-  if(div>0) formulas.push(F('Rendimiento por dividendo (dividend yield)','Ingreso','Yield = Dividendo anual / Precio × 100', divYield, '%',
+  if(div>0) formulas.push(F('Rendimiento por dividendo','Ingreso','Yield = Dividendo anual / Precio × 100', divYield, '%',
     'Retorno anual por dividendos respecto al precio actual.',
     divYield>3?'Rendimiento por dividendo atractivo para inversores que buscan ingresos.':'Rendimiento por dividendo modesto; el retorno dependería más de la apreciación del precio.'));
 
@@ -574,7 +611,7 @@ function analyzeAccion(d){
 
   // Sharpe (aprox con vol)
   const sharpe = vol>0 ? (er-rf)/vol : null;
-  if(sharpe!=null) formulas.push(F('Ratio de Sharpe (Sharpe ratio)','Riesgo','S = (R − Rf) / σ', sharpe, '',
+  if(sharpe!=null) formulas.push(F('Ratio de Sharpe','Riesgo','S = (R − Rf) / σ', sharpe, '',
     'Rentabilidad excedente por unidad de riesgo total (volatilidad).',
     sharpe>1?'Excelente relación rentabilidad-riesgo (Sharpe > 1).':sharpe>0.5?'Relación rentabilidad-riesgo aceptable.':sharpe>0?'Relación rentabilidad-riesgo baja: poco premio por el riesgo asumido.':'Sharpe negativo: la rentabilidad esperada no supera la tasa libre de riesgo.'));
 
@@ -584,7 +621,7 @@ function analyzeAccion(d){
     d.roe>15?'ROE sólido: la empresa genera buen retorno sobre el capital propio.':'ROE moderado o bajo: revisar la eficiencia en el uso del capital.'));
 
   // Apalancamiento
-  if(d.debtEquity!=null) formulas.push(F('Razón Deuda/Patrimonio (debt-to-equity)','Solvencia','D/E = Deuda total / Patrimonio', d.debtEquity, 'veces',
+  if(d.debtEquity!=null) formulas.push(F('Razón Deuda/Patrimonio','Solvencia','D/E = Deuda total / Patrimonio', d.debtEquity, 'veces',
     'Grado de apalancamiento financiero de la empresa.',
     d.debtEquity<1?'Estructura de capital conservadora.':d.debtEquity<2?'Apalancamiento moderado.':'Apalancamiento elevado: mayor riesgo financiero ante caídas de ingresos o subidas de tasas.'));
 
@@ -599,102 +636,17 @@ function analyzeAccion(d){
   // Factores de riesgo (0=bueno,100=malo)
   const riskFactors=[];
   riskFactors.push(RF('Volatilidad', Math.min(100, vol/0.5), `Volatilidad anual de ${fmt(vol)}%. ${vol>35?'Alta: oscilaciones de precio pronunciadas.':vol>20?'Media: típica de renta variable.':'Baja para una acción.'}`));
-  riskFactors.push(RF('Riesgo de mercado (systematic risk, β)', Math.min(100, beta*45), `Beta de ${fmt(beta)}. ${beta>1.3?'Amplifica los movimientos del mercado.':beta>0.8?'Se mueve en línea con el mercado.':'Menos sensible que el mercado.'}`));
+  riskFactors.push(RF('Riesgo de mercado (β)', Math.min(100, beta*45), `Beta de ${fmt(beta)}. ${beta>1.3?'Amplifica los movimientos del mercado.':beta>0.8?'Se mueve en línea con el mercado.':'Menos sensible que el mercado.'}`));
   if(per!=null) riskFactors.push(RF('Valoración (P/E)', Math.min(100, Math.max(0,(per-10)*3.3)), `P/E de ${fmt(per)}×. ${per>30?'Valoración exigente: vulnerable a decepciones.':per>20?'Valoración algo elevada.':'Valoración contenida.'}`));
   if(d.debtEquity!=null) riskFactors.push(RF('Apalancamiento', Math.min(100, d.debtEquity*33), `D/E de ${fmt(d.debtEquity)}. ${d.debtEquity>2?'Endeudamiento alto.':'Endeudamiento manejable.'}`));
   const capmGap = capm-er; // positivo = no compensa
-  riskFactors.push(RF('Premio vs. requerido (CAPM)', Math.min(100, Math.max(0, 50+capmGap*8)), capmGap<=0?`Compensa su riesgo sistemático (+${fmt(-capmGap)}% sobre lo requerido).`:`No compensa del todo su riesgo (${fmt(capmGap)}% por debajo de lo requerido).`));
+  riskFactors.push(RF('Premio sobre el rendimiento requerido (CAPM)', Math.min(100, Math.max(0, 50+capmGap*8)), capmGap<=0?`Compensa su riesgo sistemático (+${fmt(-capmGap)}% sobre lo requerido).`:`No compensa del todo su riesgo (${fmt(capmGap)}% por debajo de lo requerido).`));
 
   return {
     kpis, formulas, riskFactors,
     mc:{ mean:price, sigma:vol/100, expReturnAnnual:er/100, horizonYears:1, label:'precio de la acción' },
     stressBase:{ price, vol:vol/100, er:er/100 },
     verdictInputs:{ er, capm, sharpe, vol, gordon, price }
-  };
-}
-
-// ───────────────────────────────────────────────
-// BONOS
-// ───────────────────────────────────────────────
-function analyzeBono(d){
-  const face=d.faceValue, pricePct=d.price, cpn=d.coupon/100, freq=parseInt(d.couponFreq||'2');
-  const N=d.maturity, mkt=d.marketRate/100, infl=(d.inflation||0)/100, rating=d.rating||'BBB';
-  const formulas=[], kpis=[];
-  const cleanPrice = face*pricePct/100;
-  const couponPmt = face*cpn/freq;
-  const periods = N*freq;
-  const rPer = mkt/freq;
-
-  // Precio teórico (VP de flujos)
-  let pv=0;
-  for(let t=1;t<=periods;t++){ pv += couponPmt/Math.pow(1+rPer,t); }
-  pv += face/Math.pow(1+rPer,periods);
-  formulas.push(F('Precio teórico del bono (fair value)','Valoración','P = Σ C/(1+r)ᵗ + VN/(1+r)ⁿ', pv, '$',
-    'Valor presente de todos los cupones futuros más el valor nominal, descontados a la tasa de mercado.',
-    pv>cleanPrice?`El precio teórico ($${fmt(pv)}) supera el precio de mercado ($${fmt(cleanPrice)}): el bono podría estar infravalorado.`:`El precio teórico ($${fmt(pv)}) está por debajo del precio de mercado ($${fmt(cleanPrice)}): el bono podría estar caro.`));
-
-  // YTM aproximado (fórmula de aproximación)
-  const ytmApprox = ((couponPmt*freq) + (face-cleanPrice)/N) / ((face+cleanPrice)/2) * 100;
-  formulas.push(F('Rendimiento al vencimiento (YTM aprox.)','Rendimiento','YTM ≈ [C + (VN−P)/n] / [(VN+P)/2]', ytmApprox, '%',
-    'Rendimiento anual total si se mantiene el bono hasta el vencimiento.',
-    ytmApprox>d.marketRate?`El YTM (${fmt(ytmApprox)}%) supera la tasa de mercado de referencia: el bono ofrece un rendimiento competitivo.`:`El YTM (${fmt(ytmApprox)}%) está cerca o por debajo de la tasa de referencia.`));
-
-  // Rendimiento corriente
-  const currentYield = (face*cpn)/cleanPrice*100;
-  formulas.push(F('Rendimiento corriente (current yield)','Rendimiento','RC = Cupón anual / Precio × 100', currentYield, '%',
-    'Retorno anual por cupones respecto al precio pagado.',
-    'Mide el flujo de ingreso inmediato, sin considerar la ganancia o pérdida de capital al vencimiento.'));
-
-  // Duración de Macaulay y modificada
-  let macaulay=0;
-  for(let t=1;t<=periods;t++){ macaulay += (t/freq)*(couponPmt/Math.pow(1+rPer,t)); }
-  macaulay += N*(face/Math.pow(1+rPer,periods));
-  macaulay = macaulay/pv;
-  const modDur = macaulay/(1+rPer);
-  formulas.push(F('Duración de Macaulay','Sensibilidad','D = Σ t·VP(flujoₜ) / Precio', macaulay, 'años',
-    'Plazo promedio ponderado en el que se recuperan los flujos del bono.',
-    `El bono recupera su inversión en promedio en ${fmt(macaulay)} años. Mayor duración implica mayor sensibilidad a las tasas.`));
-  formulas.push(F('Duración modificada','Sensibilidad','Dₘ = D / (1 + r/f)', modDur, '%',
-    'Variación porcentual del precio ante un cambio de 1% en las tasas de interés.',
-    `Si las tasas suben 1%, el precio caería aproximadamente ${fmt(modDur)}%. Si bajan 1%, subiría en proporción similar.`));
-
-  // Convexidad (aprox)
-  let convex=0;
-  for(let t=1;t<=periods;t++){ convex += couponPmt*t*(t+1)/Math.pow(1+rPer,t+2); }
-  convex += face*periods*(periods+1)/Math.pow(1+rPer,periods+2);
-  convex = convex/(pv*freq*freq);
-  formulas.push(F('Convexidad','Sensibilidad','C = Σ t(t+1)·VP / [P·(1+r)²]', convex, '',
-    'Corrige la estimación de la duración para grandes cambios de tasas (curvatura precio-rendimiento).',
-    'Una mayor convexidad es favorable: el bono gana más cuando las tasas bajan de lo que pierde cuando suben.'));
-
-  // Rendimiento real
-  const realYield = ((1+ytmApprox/100)/(1+infl)-1)*100;
-  if(infl>0) formulas.push(F('Rendimiento real (Fisher)','Rendimiento','r_real = [(1+YTM)/(1+π)] − 1', realYield, '%',
-    'Rendimiento ajustado por la inflación esperada.',
-    realYield>0?`Tras la inflación (${fmt(d.inflation)}%), el bono conserva poder adquisitivo con un rendimiento real de ${fmt(realYield)}%.`:`El rendimiento real es negativo: la inflación esperada erosiona el poder adquisitivo del rendimiento nominal.`));
-
-  // KPIs
-  kpis.push({lbl:'Precio mercado', val:fmtMoney(cleanPrice), cls:''});
-  kpis.push({lbl:'Precio teórico', val:fmtMoney(pv), cls:pv>cleanPrice?'g':'r'});
-  kpis.push({lbl:'YTM', val:fmtPct(ytmApprox), cls:'b'});
-  kpis.push({lbl:'Duración mod.', val:fmt(modDur), cls:modDur>7?'r':modDur>4?'a':'g'});
-  if(infl>0) kpis.push({lbl:'Rend. real', val:fmtPct(realYield), cls:realYield>0?'g':'r'});
-
-  // Riesgo crediticio por rating
-  const ratingScore = {AAA:5,AA:12,A:22,BBB:38,BB:58,B:75,CCC:92}[rating] || 50;
-  const riskFactors=[];
-  riskFactors.push(RF('Riesgo de tasa de interés (interest rate risk)', Math.min(100, modDur*9), `Duración modificada de ${fmt(modDur)}. ${modDur>7?'Alta sensibilidad: vulnerable a subidas de tasas.':modDur>4?'Sensibilidad media.':'Baja sensibilidad a tasas.'}`));
-  riskFactors.push(RF('Riesgo crediticio (credit risk)', ratingScore, `Calificación ${rating}. ${ratingScore<25?'Emisor de alta calidad, bajo riesgo de impago.':ratingScore<55?'Grado de inversión con riesgo moderado.':'Grado especulativo: mayor riesgo de incumplimiento.'}`));
-  const inflRisk = infl>0 ? Math.min(100, Math.max(0, 50 - realYield*8)) : 40;
-  riskFactors.push(RF('Riesgo de inflación', inflRisk, infl>0?(realYield>0?'El rendimiento supera la inflación esperada.':'La inflación esperada supera el rendimiento: riesgo de pérdida de poder adquisitivo.'):'Inflación no especificada.'));
-  const valGap = (cleanPrice-pv)/pv*100;
-  riskFactors.push(RF('Riesgo de valoración', Math.min(100, Math.max(0, 50+valGap*5)), valGap<=0?'Cotiza por debajo de su valor teórico.':'Cotiza por encima de su valor teórico.'));
-
-  return {
-    kpis, formulas, riskFactors,
-    mc:{ mean:cleanPrice, sigma:Math.max(0.02, modDur*0.01*1.5), expReturnAnnual:ytmApprox/100, horizonYears:1, label:'precio del bono', special:'bond' },
-    stressBase:{ price:cleanPrice, modDur, ytm:ytmApprox/100 },
-    verdictInputs:{ ytm:ytmApprox, marketRate:d.marketRate, modDur, ratingScore, realYield:infl>0?realYield:null, valGap, priceVsTheory:pv-cleanPrice }
   };
 }
 
@@ -715,7 +667,7 @@ function analyzeDivisa(d){
 
   // Tipo de cambio forward (paridad de tasas)
   const fwd = px * (1+rQ*horizon)/(1+rB*horizon);
-  formulas.push(F('Tipo de cambio forward (forward rate, PTI)','Paridad','F = S × (1+i_cot·t)/(1+i_base·t)', fwd, '',
+  formulas.push(F('Tipo de cambio a futuro (paridad de tasas, PTI)','Paridad','F = S × (1+i_cot·t)/(1+i_base·t)', fwd, '',
     'Tipo de cambio teórico a futuro según la paridad de tasas de interés.',
     fwd>px?`La paridad implica una depreciación esperada de la base (forward ${fmt(fwd,4)} > spot ${fmt(px,4)}).`:`La paridad implica una apreciación esperada de la base (forward ${fmt(fwd,4)} < spot ${fmt(px,4)}).`));
 
@@ -729,7 +681,7 @@ function analyzeDivisa(d){
 
   // Retorno total esperado (apreciación + carry)
   const totalRet = er*100 + carry;
-  formulas.push(F('Retorno total esperado (total return)','Rendimiento','R = apreciación + carry', totalRet, '%',
+  formulas.push(F('Retorno total esperado','Rendimiento','R = apreciación + carry', totalRet, '%',
     'Retorno combinado por movimiento del tipo de cambio más el diferencial de tasas.',
     totalRet>0?`El retorno total esperado es positivo (${fmt(totalRet)}%): apreciación y/o carry favorecen la posición.`:`El retorno total esperado es negativo (${fmt(totalRet)}%): el carry o la depreciación esperada penalizan la posición.`));
 
@@ -747,9 +699,9 @@ function analyzeDivisa(d){
   kpis.push({lbl:'Volatilidad', val:fmtPct(vol), cls:vol>12?'r':'a'});
 
   const riskFactors=[];
-  riskFactors.push(RF('Volatilidad cambiaria (FX volatility)', Math.min(100, vol/0.15), `Volatilidad de ${fmt(vol)}%. ${vol>12?'Alta para una divisa: movimientos amplios.':vol>7?'Media.':'Baja: par relativamente estable.'}`));
-  riskFactors.push(RF('Carry (diferencial de tasas)', carry>=0?Math.max(0,40-carry*8):Math.min(100,50-carry*10), carry>=0?'Carry positivo: favorece mantener la posición.':'Carry negativo: costo por mantener la posición abierta.'));
-  riskFactors.push(RF('Riesgo de paridad (interest rate parity)', Math.min(100, Math.abs((fwd-px)/px*100)*12), `La paridad de tasas implica un ajuste de ${fmt((fwd-px)/px*100)}% en el tipo de cambio.`));
+  riskFactors.push(RF('Volatilidad cambiaria', Math.min(100, vol/0.15), `Volatilidad de ${fmt(vol)}%. ${vol>12?'Alta para una divisa: movimientos amplios.':vol>7?'Media.':'Baja: par relativamente estable.'}`));
+  riskFactors.push(RF('Diferencial de tasas (carry)', carry>=0?Math.max(0,40-carry*8):Math.min(100,50-carry*10), carry>=0?'Carry positivo: favorece mantener la posición.':'Carry negativo: costo por mantener la posición abierta.'));
+  riskFactors.push(RF('Riesgo de paridad de tasas', Math.min(100, Math.abs((fwd-px)/px*100)*12), `La paridad de tasas implica un ajuste de ${fmt((fwd-px)/px*100)}% en el tipo de cambio.`));
   riskFactors.push(RF('Riesgo macro (inflación)', (iB||iQ)?Math.min(100, Math.abs(iQ-iB)*100*15):45, (iB||iQ)?`Diferencial de inflación de ${fmt(Math.abs(iQ-iB)*100)}% entre ambas economías.`:'Datos de inflación no especificados.'));
 
   return {
@@ -760,149 +712,8 @@ function analyzeDivisa(d){
   };
 }
 
-// ───────────────────────────────────────────────
-// FUTUROS
-// ───────────────────────────────────────────────
-function analyzeFuturo(d){
-  const fut=d.price, spot=d.spot, size=d.contractSize, margin=d.margin, vol=d.volatility;
-  const days=d.daysToExpiry, rf=(d.riskFreeRate||5)/100, storage=(d.storageCost||0)/100;
-  const er=(d.expReturn||0)/100;
-  const t = days/365;
-  const formulas=[], kpis=[];
-
-  // Valor nocional y apalancamiento
-  const notional = fut*size;
-  const leverage = notional/margin;
-  formulas.push(F('Valor nocional del contrato (notional value)','Exposición','Nocional = Precio × Tamaño', notional, '$',
-    'Valor total del activo subyacente controlado por un contrato.',
-    `Cada contrato controla $${fmt(notional)} de subyacente con apenas $${fmt(margin)} de margen.`));
-  formulas.push(F('Apalancamiento','Exposición','L = Nocional / Margen', leverage, 'veces',
-    'Cuántas veces se multiplica la exposición respecto al capital aportado.',
-    leverage>15?`Apalancamiento muy alto (${fmt(leverage)}×): las ganancias y pérdidas se amplifican drásticamente.`:leverage>8?`Apalancamiento elevado (${fmt(leverage)}×): gestionar el riesgo con cuidado.`:`Apalancamiento moderado (${fmt(leverage)}×).`));
-
-  // Base
-  const basis = fut-spot;
-  const basisPct = basis/spot*100;
-  formulas.push(F('Base (basis: futuro − spot)','Estructura','Base = F − S', basis, '$',
-    'Diferencia entre el precio del futuro y el precio al contado.',
-    basis>0?`Base positiva (contango): el futuro cotiza ${fmt(basisPct)}% por encima del spot, reflejando costos de acarreo o expectativas alcistas.`:`Base negativa (backwardation): el futuro cotiza por debajo del spot, señal de escasez o fuerte demanda inmediata.`));
-
-  // Precio teórico (cost of carry)
-  const theoryF = spot*Math.exp((rf+storage)*t);
-  formulas.push(F('Precio teórico del futuro (fair value)','Valoración','F = S × e^((r+c)·t)', theoryF, '$',
-    'Precio justo del futuro según el modelo de costo de acarreo (cost of carry).',
-    Math.abs(theoryF-fut)/fut<0.02?'El futuro cotiza muy cerca de su valor teórico: mercado eficiente, sin arbitraje evidente.':theoryF>fut?`El futuro ($${fmt(fut)}) cotiza por debajo de su valor teórico ($${fmt(theoryF)}): posible oportunidad de compra.`:`El futuro ($${fmt(fut)}) cotiza por encima de su valor teórico ($${fmt(theoryF)}): podría estar sobrevalorado.`));
-
-  // Movimiento de margen / sensibilidad
-  const moveFor10pct = notional*0.10;
-  formulas.push(F('Impacto de un movimiento del 10%','Riesgo','ΔP&L = Nocional × Δ%', moveFor10pct, '$',
-    'Ganancia o pérdida ante un movimiento del 10% en el subyacente.',
-    `Un movimiento del 10% genera $${fmt(moveFor10pct)} de P&L, equivalente al ${fmt(moveFor10pct/margin*100)}% del margen aportado.`));
-
-  kpis.push({lbl:'Precio futuro', val:fmtMoney(fut), cls:''});
-  kpis.push({lbl:'Apalancamiento', val:fmt(leverage)+'×', cls:leverage>12?'r':leverage>6?'a':'g'});
-  kpis.push({lbl:'Base', val:(basis>=0?'+':'')+fmt(basis), cls:basis>=0?'a':'g'});
-  kpis.push({lbl:'Precio teórico', val:fmtMoney(theoryF), cls:'b'});
-  kpis.push({lbl:'Volatilidad', val:fmtPct(vol), cls:vol>30?'r':'a'});
-
-  const riskFactors=[];
-  riskFactors.push(RF('Apalancamiento', Math.min(100, leverage*5.5), `${fmt(leverage)}× de apalancamiento. ${leverage>15?'Riesgo de liquidación elevado ante movimientos adversos.':'Exposición amplificada respecto al capital.'}`));
-  riskFactors.push(RF('Volatilidad', Math.min(100, vol/0.45), `Volatilidad de ${fmt(vol)}%. ${vol>30?'Alta: típica de materias primas.':'Moderada.'}`));
-  riskFactors.push(RF('Riesgo de tiempo (time to expiry)', Math.min(100, Math.max(10, 100-days/2)), `${days} días al vencimiento. ${days<30?'Cercano al vencimiento: mayor presión de cierre/rollover.':'Plazo holgado.'}`));
-  riskFactors.push(RF('Desvío vs. valor teórico (mispricing)', Math.min(100, Math.abs((fut-theoryF)/theoryF*100)*10), `El futuro se desvía ${fmt((fut-theoryF)/theoryF*100)}% de su valor teórico.`));
-
-  return {
-    kpis, formulas, riskFactors,
-    mc:{ mean:fut, sigma:vol/100, expReturnAnnual:er, horizonYears:t, label:'precio del futuro' },
-    stressBase:{ price:fut, vol:vol/100, leverage, margin, notional },
-    verdictInputs:{ leverage, vol, basisPct, theoryGap:(fut-theoryF)/theoryF*100, days }
-  };
-}
-
-// ───────────────────────────────────────────────
-// DERIVADOS (OPCIONES) — Black-Scholes
-// ───────────────────────────────────────────────
-function analyzeDerivado(d){
-  const S=d.spot, K=d.strike, vol=d.volatility/100, days=d.daysToExpiry;
-  const r=d.riskFreeRate/100, q=(d.dividend||0)/100, isCall=d.optType==='call';
-  const mktPrice=d.price;
-  const t=days/365;
-  const formulas=[], kpis=[];
-
-  const d1=(Math.log(S/K)+(r-q+vol*vol/2)*t)/(vol*Math.sqrt(t));
-  const d2=d1-vol*Math.sqrt(t);
-  const Nd1=normCDF(d1), Nd2=normCDF(d2), Nnd1=normCDF(-d1), Nnd2=normCDF(-d2);
-
-  // Precio Black-Scholes
-  let bsPrice;
-  if(isCall) bsPrice = S*Math.exp(-q*t)*Nd1 - K*Math.exp(-r*t)*Nd2;
-  else bsPrice = K*Math.exp(-r*t)*Nnd2 - S*Math.exp(-q*t)*Nnd1;
-  formulas.push(F('Valor teórico (Black-Scholes)','Valoración', isCall?'C = S·e^(−qt)·N(d₁) − K·e^(−rt)·N(d₂)':'P = K·e^(−rt)·N(−d₂) − S·e^(−qt)·N(−d₁)', bsPrice, '$',
-    'Precio justo de la opción según el modelo Black-Scholes-Merton.',
-    mktPrice!=null ? (Math.abs(bsPrice-mktPrice)/mktPrice<0.05?`El valor teórico ($${fmt(bsPrice)}) coincide con la prima de mercado ($${fmt(mktPrice)}): opción justamente valorada.`:bsPrice>mktPrice?`El valor teórico ($${fmt(bsPrice)}) supera la prima de mercado ($${fmt(mktPrice)}): la opción podría estar barata.`:`El valor teórico ($${fmt(bsPrice)}) es menor que la prima de mercado ($${fmt(mktPrice)}): la opción podría estar cara.`) : `Valor teórico de la prima: $${fmt(bsPrice)} por acción.`));
-
-  // Valor intrínseco y temporal
-  const intrinsic = isCall ? Math.max(0,S-K) : Math.max(0,K-S);
-  const timeValue = bsPrice - intrinsic;
-  formulas.push(F('Valor intrínseco (intrinsic value)','Composición', isCall?'VI = máx(S − K, 0)':'VI = máx(K − S, 0)', intrinsic, '$',
-    'Valor que tendría la opción si se ejerciera ahora mismo.',
-    intrinsic>0?`La opción está "dentro del dinero" por $${fmt(intrinsic)}.`:`La opción está "fuera del dinero": su valor es enteramente temporal.`));
-  formulas.push(F('Valor temporal (time value)','Composición','VT = Prima − Valor intrínseco', timeValue, '$',
-    'Parte de la prima que refleja la probabilidad de que la opción gane valor antes de vencer.',
-    `El valor temporal ($${fmt(timeValue)}) se erosiona conforme se acerca el vencimiento (decaimiento theta).`));
-
-  // Griegas
-  const expQt=Math.exp(-q*t);
-  const delta = isCall ? expQt*Nd1 : expQt*(Nd1-1);
-  const gamma = expQt*normPDF(d1)/(S*vol*Math.sqrt(t));
-  const vega = S*expQt*normPDF(d1)*Math.sqrt(t)/100;
-  let theta;
-  if(isCall) theta = (-S*expQt*normPDF(d1)*vol/(2*Math.sqrt(t)) - r*K*Math.exp(-r*t)*Nd2 + q*S*expQt*Nd1)/365;
-  else theta = (-S*expQt*normPDF(d1)*vol/(2*Math.sqrt(t)) + r*K*Math.exp(-r*t)*Nnd2 - q*S*expQt*Nnd1)/365;
-  const rho = (isCall ? K*t*Math.exp(-r*t)*Nd2 : -K*t*Math.exp(-r*t)*Nnd2)/100;
-
-  formulas.push(F('Delta (Δ)','Griega','Δ = e^(−qt)·N(d₁)', delta, '',
-    'Cuánto cambia la prima por cada $1 de movimiento del subyacente.',
-    `Por cada $1 que se mueva el subyacente, la prima varía aproximadamente $${fmt(Math.abs(delta))}. ${Math.abs(delta)>0.5?'La opción se comporta de forma parecida al subyacente.':'La opción responde con menor intensidad que el subyacente.'}`));
-  formulas.push(F('Gamma (Γ)','Griega','Γ = e^(−qt)·φ(d₁)/(S·σ·√t)', gamma, '',
-    'Cuánto cambia el delta por cada $1 de movimiento del subyacente.',
-    'Un gamma alto implica que el delta es inestable: la opción es muy reactiva cerca del precio de ejercicio.'));
-  formulas.push(F('Theta (Θ)','Griega','Θ = decaimiento temporal diario', theta, '$/día',
-    'Cuánto pierde la opción de valor cada día que pasa, por el solo transcurso del tiempo.',
-    `La opción pierde alrededor de $${fmt(Math.abs(theta))} por día por decaimiento temporal. ${isCall?'':'(Para el comprador de la put.)'}`));
-  formulas.push(F('Vega (ν)','Griega','ν = S·e^(−qt)·φ(d₁)·√t', vega, '$/1% vol',
-    'Cuánto cambia la prima por cada 1% de cambio en la volatilidad implícita.',
-    `Si la volatilidad sube 1%, la prima aumenta unos $${fmt(vega)}. Las opciones son muy sensibles a la volatilidad.`));
-
-  // Probabilidad de ejercicio (riesgo-neutral)
-  const probITM = isCall ? Nd2 : Nnd2;
-  formulas.push(F('Probabilidad de terminar dentro del dinero (in the money)','Probabilidad', isCall?'P ≈ N(d₂)':'P ≈ N(−d₂)', probITM*100, '%',
-    'Probabilidad (riesgo-neutral) de que la opción expire con valor.',
-    probITM>0.5?`Más del 50% de probabilidad de terminar con valor (${fmt(probITM*100)}%).`:`Menos del 50% de probabilidad de terminar con valor (${fmt(probITM*100)}%): apuesta especulativa.`));
-
-  kpis.push({lbl:'Valor teórico (BS)', val:fmtMoney(bsPrice), cls:'b'});
-  if(mktPrice!=null) kpis.push({lbl:'Prima mercado', val:fmtMoney(mktPrice), cls:bsPrice>mktPrice?'g':'r'});
-  kpis.push({lbl:'Delta', val:fmt(delta), cls:''});
-  kpis.push({lbl:'Theta', val:fmt(theta)+'/día', cls:'r'});
-  kpis.push({lbl:'Prob. ITM', val:fmtPct(probITM*100), cls:probITM>0.5?'g':'a'});
-
-  const moneyness = isCall ? (S/K) : (K/S);
-  const riskFactors=[];
-  riskFactors.push(RF('Probabilidad de pérdida total (max loss)', Math.min(100, (1-probITM)*100), `${fmt((1-probITM)*100)}% de probabilidad de expirar sin valor. Las opciones pueden perder el 100% de la prima.`));
-  riskFactors.push(RF('Decaimiento temporal (theta decay)', Math.min(100, Math.abs(theta)/bsPrice*100*30), `Theta de $${fmt(Math.abs(theta))}/día. El tiempo juega en contra del comprador de la opción.`));
-  riskFactors.push(RF('Sensibilidad a volatilidad (vega risk)', Math.min(100, vega/bsPrice*100*8), `Vega de $${fmt(vega)}. Cambios en la volatilidad implícita afectan fuertemente la prima.`));
-  riskFactors.push(RF('Posición (moneyness)', moneyness<0.97?80:moneyness<1.0?55:moneyness<1.05?30:15, moneyness<1?'Fuera del dinero: depende de un movimiento favorable para ganar valor.':'Dentro o cerca del dinero: mayor probabilidad de retener valor.'));
-
-  return {
-    kpis, formulas, riskFactors,
-    mc:{ mean:S, sigma:vol, expReturnAnnual:r-q, horizonYears:t, label:'precio del subyacente', option:{K,isCall,bsPrice,t} },
-    stressBase:{ S, K, isCall, bsPrice, delta, vol, t },
-    verdictInputs:{ probITM, bsPrice, mktPrice, theta, moneyness, intrinsic }
-  };
-}
-
 // Despachador
-const ANALYZERS = { accion:analyzeAccion, bono:analyzeBono, divisa:analyzeDivisa, futuro:analyzeFuturo, derivado:analyzeDerivado };
+const ANALYZERS = { accion:analyzeAccion, divisa:analyzeDivisa };
 
 // ══════════════════════════════════════════════════════════════
 // SIMULACIÓN MONTE CARLO
@@ -968,21 +779,9 @@ function computeVerdict(result, mcRes){
     if(vi.sharpe!=null) attract += vi.sharpe*8;
     if(vi.gordon!=null && vi.price) attract += (vi.gordon/vi.price-1)*30;
     if(vi.er!=null && vi.capm!=null) attract += (vi.er-vi.capm)*2;
-  } else if(currentMarket==='bono'){
-    attract += (vi.ytm - vi.marketRate)*6;
-    if(vi.realYield!=null) attract += vi.realYield*3;
-    attract += (vi.priceVsTheory/Math.abs(vi.priceVsTheory||1))* Math.min(15, Math.abs(vi.priceVsTheory)/10);
-    attract -= (vi.ratingScore-30)*0.3;
   } else if(currentMarket==='divisa'){
     if(vi.sharpe!=null) attract += vi.sharpe*10;
     attract += vi.totalRet*1.5;
-  } else if(currentMarket==='futuro'){
-    attract -= Math.max(0,vi.leverage-8)*1.5;
-    attract += vi.theoryGap<0 ? Math.min(12,-vi.theoryGap*2) : -Math.min(12,vi.theoryGap*2);
-  } else if(currentMarket==='derivado'){
-    attract += (vi.probITM-0.5)*60;
-    if(vi.mktPrice!=null) attract += (vi.bsPrice/vi.mktPrice-1)*40;
-    attract -= 10; // las opciones cargan riesgo asimétrico
   }
 
   attract = Math.max(0, Math.min(100, attract));
@@ -1157,7 +956,7 @@ function renderMonteCarlo(mc, mcCfg){
     {lbl:'Valor inicial', val:fmt(mc.initial,dec), cls:''},
     {lbl:'Valor esperado', val:fmt(mc.meanFinal,dec), cls:mc.meanFinal>=mc.initial?'g':'r'},
     {lbl:'Retorno esperado', val:fmtPct(mc.expRet), cls:mc.expRet>=0?'g':'r'},
-    {lbl:'VaR 95%', val:fmtPct(mc.var95Ret), cls:'r', sub:'Valor en Riesgo (Value at Risk)'},
+    {lbl:'VaR 95%', val:fmtPct(mc.var95Ret), cls:'r', sub:'Valor en Riesgo (VaR)'},
     {lbl:'Prob. de pérdida', val:fmtPct(mc.probLoss,0), cls:mc.probLoss>50?'r':'a'},
     {lbl:'Rango P5–P95', val:fmt(mc.p5,dec)+' – '+fmt(mc.p95,dec), cls:'b'},
   ].map(k=>`<div class="kpi"><div class="kpi-lbl">${k.lbl}</div><div class="kpi-val ${k.cls}" style="font-size:17px;">${k.val}</div>${k.sub?`<div class="kpi-sub">${k.sub}</div>`:''}</div>`).join('');
@@ -1216,6 +1015,304 @@ function paintFormulas(list){
 // ───── Init ─────
 renderMarkets();
 
-</script>
-</body>
-</html>
+// ══════════════════════════════════════════════════════════════
+// CAPA INTERACTIVA: controles en vivo, escenarios, historial, comparación
+// ══════════════════════════════════════════════════════════════
+
+const STORAGE_KEY = 'capitallab_analytics_v1';
+
+// ───────────────────────────────────────────────
+// RE-EJECUTAR ANÁLISIS CON DATOS DADOS (sin tocar el formulario)
+// ───────────────────────────────────────────────
+function analyzeWith(market, data){
+  const prevMarket = currentMarket;
+  currentMarket = market;
+  const result = ANALYZERS[market](data);
+  const mcRes = runMonteCarlo(result.mc);
+  const verdict = computeVerdict(result, mcRes);
+  const stress = buildStress(result, mcRes, data);
+  currentMarket = prevMarket;
+  return { data, result, mcRes, verdict, stress, market };
+}
+
+// ───────────────────────────────────────────────
+// CONTROLES EN VIVO (sliders)
+// ───────────────────────────────────────────────
+let liveActive = false;
+let liveData = null;   // copia editable de los datos
+
+function toggleLiveControls(){
+  const panel = $('live-panel');
+  liveActive = panel.classList.contains('hidden');
+  panel.classList.toggle('hidden');
+  $('btn-live').classList.toggle('btn-primary', liveActive);
+  if(liveActive){ renderLiveControls(); panel.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+}
+
+function renderLiveControls(){
+  const m = MARKETS[lastResult.market];
+  liveData = Object.assign({}, lastResult.data);
+  const sliders = m.fields.filter(f=>f.sl && liveData[f.k]!=null && !isNaN(liveData[f.k]));
+  $('live-sliders').innerHTML = sliders.map(f=>{
+    const [min,max,step] = f.sl;
+    const v = liveData[f.k];
+    return `<div class="lslider">
+      <div class="lslider-head">
+        <span class="lslider-label">${f.label}</span>
+        <span class="lslider-val" id="lv-${f.k}">${fmt(v, step<1?(step<0.01?4:2):0)}${f.unit?(' '+f.unit):''}</span>
+      </div>
+      <input type="range" min="${min}" max="${max}" step="${step}" value="${v}" oninput="onLiveChange('${f.k}', this.value, ${step})">
+      <div class="lslider-range"><span>${fmt(min,step<1?2:0)}</span><span>${fmt(max,step<1?2:0)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+let liveDebounce = null;
+function onLiveChange(key, val, step){
+  liveData[key] = parseFloat(val);
+  const f = MARKETS[lastResult.market].fields.find(x=>x.k===key);
+  $('lv-'+key).textContent = fmt(parseFloat(val), step<1?(step<0.01?4:2):0)+(f.unit?(' '+f.unit):'');
+  // Recalcular con debounce ligero para fluidez
+  clearTimeout(liveDebounce);
+  liveDebounce = setTimeout(()=>{
+    lastResult = analyzeWith(lastResult.market, Object.assign({}, liveData));
+    // Re-render sin tocar el panel de controles
+    renderVerdict(lastResult.verdict, lastResult.mcRes);
+    renderKPIs(lastResult.result.kpis);
+    renderRiskFactors(lastResult.result.riskFactors, lastResult.verdict.riskScore);
+    renderMonteCarlo(lastResult.mcRes, lastResult.result.mc);
+    renderStress(lastResult.stress);
+    renderFormulas(lastResult.result.formulas);
+    renderScenarios();
+  }, 90);
+}
+
+function resetLiveControls(){
+  liveData = Object.assign({}, lastResult.originalData || lastResult.data);
+  lastResult = analyzeWith(lastResult.market, Object.assign({}, liveData));
+  renderResults();
+  if(liveActive){ $('live-panel').classList.remove('hidden'); renderLiveControls(); }
+  toast('Valores originales restaurados','ok');
+}
+
+// ───────────────────────────────────────────────
+// ESCENARIOS INTERACTIVOS
+// Tres palancas: optimismo de retorno, nivel de volatilidad, horizonte
+// ───────────────────────────────────────────────
+let scenarioState = { retShift:0, volMult:1, horizonMult:1 };
+
+function renderScenarios(){
+  const sc = scenarioState;
+  $('scenario-controls').innerHTML = `
+    <div class="lslider">
+      <div class="lslider-head"><span class="lslider-label">Ajuste de rentabilidad esperada</span><span class="lslider-val" id="sc-ret">${sc.retShift>=0?'+':''}${fmt(sc.retShift,1)}%</span></div>
+      <input type="range" min="-15" max="15" step="0.5" value="${sc.retShift}" oninput="onScenario('retShift',this.value)">
+      <div class="lslider-range"><span>Pesimista −15%</span><span>Optimista +15%</span></div>
+    </div>
+    <div class="lslider">
+      <div class="lslider-head"><span class="lslider-label">Nivel de volatilidad</span><span class="lslider-val" id="sc-vol">×${fmt(sc.volMult,2)}</span></div>
+      <input type="range" min="0.5" max="2" step="0.05" value="${sc.volMult}" oninput="onScenario('volMult',this.value)">
+      <div class="lslider-range"><span>Calma ×0.5</span><span>Turbulencia ×2</span></div>
+    </div>
+    <div class="lslider">
+      <div class="lslider-head"><span class="lslider-label">Horizonte de tiempo</span><span class="lslider-val" id="sc-hor">×${fmt(sc.horizonMult,2)}</span></div>
+      <input type="range" min="0.25" max="3" step="0.25" value="${sc.horizonMult}" oninput="onScenario('horizonMult',this.value)">
+      <div class="lslider-range"><span>Corto ×0.25</span><span>Largo ×3</span></div>
+    </div>`;
+  computeScenario();
+}
+
+function onScenario(key, val){
+  scenarioState[key] = parseFloat(val);
+  const lbl = {retShift:'sc-ret', volMult:'sc-vol', horizonMult:'sc-hor'};
+  if(key==='retShift') $('sc-ret').textContent = (scenarioState.retShift>=0?'+':'')+fmt(scenarioState.retShift,1)+'%';
+  if(key==='volMult') $('sc-vol').textContent = '×'+fmt(scenarioState.volMult,2);
+  if(key==='horizonMult') $('sc-hor').textContent = '×'+fmt(scenarioState.horizonMult,2);
+  computeScenario();
+}
+
+function computeScenario(){
+  const base = lastResult.result.mc;
+  const mc = {
+    mean: base.mean,
+    sigma: base.sigma * scenarioState.volMult,
+    expReturnAnnual: base.expReturnAnnual + scenarioState.retShift/100,
+    horizonYears: base.horizonYears * scenarioState.horizonMult,
+    decimals: base.decimals || 2
+  };
+  const res = runMonteCarlo(mc);
+  const dec = mc.decimals;
+  $('scenario-readout').innerHTML = [
+    {lbl:'Valor esperado', val:fmt(res.meanFinal,dec), cls:res.meanFinal>=base.mean?'g':'r'},
+    {lbl:'Retorno esperado', val:fmtPct(res.expRet), cls:res.expRet>=0?'g':'r'},
+    {lbl:'Prob. de pérdida', val:fmtPct(res.probLoss,0), cls:res.probLoss>50?'r':'a'},
+    {lbl:'VaR 95%', val:fmtPct(res.var95Ret), cls:'r'},
+    {lbl:'Rango P5–P95', val:fmt(res.p5,dec)+' – '+fmt(res.p95,dec), cls:'b'},
+  ].map(s=>`<div class="sc-stat"><div class="sc-stat-lbl">${s.lbl}</div><div class="sc-stat-val ${s.cls}">${s.val}</div></div>`).join('');
+}
+
+// ───────────────────────────────────────────────
+// HISTORIAL (localStorage)
+// ───────────────────────────────────────────────
+function loadHistory(){
+  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; }
+  catch(e){ return []; }
+}
+function saveHistory(list){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch(e){}
+}
+
+function saveCurrentAnalysis(){
+  if(!lastResult){ return; }
+  const list = loadHistory();
+  const entry = {
+    id: Date.now(),
+    name: lastResult.data.ticker || MARKETS[lastResult.market].name,
+    market: lastResult.market,
+    data: lastResult.data,
+    grade: lastResult.verdict.grade,
+    composite: lastResult.verdict.composite,
+    riskScore: lastResult.verdict.riskScore,
+    expRet: lastResult.mcRes.expRet,
+    probLoss: lastResult.mcRes.probLoss,
+    date: new Date().toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+  };
+  // Evitar duplicados exactos por nombre+mercado: actualiza el más reciente con ese nombre
+  list.unshift(entry);
+  if(list.length>30) list.pop();
+  saveHistory(list);
+  toast('Análisis guardado en este dispositivo','ok');
+}
+
+function renderHistory(){
+  const list = loadHistory();
+  const sec = $('history-section');
+  if(!list.length){ sec.classList.add('hidden'); return; }
+  sec.classList.remove('hidden');
+  const gradeColor = g => g==='A'?'var(--green)':g==='B'?'var(--amber)':g==='C'?'var(--amber)':'var(--red)';
+  $('history-grid').innerHTML = list.map(h=>`
+    <div class="hist-card" onclick="openHistory(${h.id})">
+      <div class="hist-grade" style="background:${gradeColor(h.grade)}22;color:${gradeColor(h.grade)};">${h.grade}</div>
+      <div class="hist-name">${h.name}</div>
+      <div class="hist-market">${MARKETS[h.market]?MARKETS[h.market].name:h.market}</div>
+      <div class="hist-metrics">
+        <span>Retorno <b class="${h.expRet>=0?'g':'r'}">${h.expRet>=0?'+':''}${fmt(h.expRet,1)}%</b></span>
+        <span>Riesgo <b>${fmt(h.riskScore,0)}</b></span>
+      </div>
+      <div class="hist-date">${h.date}</div>
+      <i class="ti ti-trash hist-del" onclick="event.stopPropagation();deleteHistory(${h.id})"></i>
+    </div>`).join('');
+}
+
+function openHistory(id){
+  const list = loadHistory();
+  const h = list.find(x=>x.id===id);
+  if(!h) return;
+  currentMarket = h.market;
+  lastResult = analyzeWith(h.market, Object.assign({}, h.data));
+  lastResult.originalData = Object.assign({}, h.data);
+  scenarioState = { retShift:0, volMult:1, horizonMult:1 };
+  renderResults();
+  show('page-results');
+  setStep(3);
+}
+
+function deleteHistory(id){
+  let list = loadHistory();
+  list = list.filter(x=>x.id!==id);
+  saveHistory(list);
+  renderHistory();
+  toast('Análisis eliminado','');
+}
+
+// ───────────────────────────────────────────────
+// COMPARACIÓN DE ACTIVOS
+// ───────────────────────────────────────────────
+function openCompare(){
+  // Guardar el actual si no está, y mostrar selector
+  const list = loadHistory();
+  if(!list.length){
+    toast('Guarda al menos un análisis para poder comparar','err');
+    saveCurrentAnalysis();
+    return;
+  }
+  show('page-compare');
+  renderComparePicker();
+}
+function goToResultsFromCompare(){ show('page-results'); setStep(3); }
+
+function renderComparePicker(){
+  const list = loadHistory();
+  const current = lastResult;
+  $('compare-info').innerHTML = `Comparando <b>${current.data.ticker||MARKETS[current.market].name}</b> (actual) con un análisis guardado. Elige el segundo:`;
+  // Selector de candidatos
+  const picker = list.map(h=>`<button class="btn btn-ghost btn-sm" onclick="doCompare(${h.id})">${h.name} · ${MARKETS[h.market]?MARKETS[h.market].name:h.market} (${h.grade})</button>`).join('');
+  $('compare-grid').innerHTML = `<div style="grid-column:1/-1;"><div class="cmp-pick">${picker}</div></div>`;
+}
+
+function doCompare(id){
+  const list = loadHistory();
+  const h = list.find(x=>x.id===id);
+  if(!h) return;
+  const A = lastResult;
+  const B = analyzeWith(h.market, Object.assign({}, h.data));
+  const aComp = A.verdict.composite, bComp = B.verdict.composite;
+  const aWin = aComp>=bComp;
+  const col = (R, isWin, tag) => {
+    const v=R.verdict, mc=R.mcRes;
+    const gc = v.grade==='A'?'var(--green)':v.grade==='B'||v.grade==='C'?'var(--amber)':'var(--red)';
+    return `<div class="cmp-col ${isWin?'winner':''}">
+      <div class="cmp-head">
+        <div><div class="cmp-name">${R.data.ticker||MARKETS[R.market].name}</div><div class="hist-market">${MARKETS[R.market].name}</div></div>
+        <div class="cmp-grade" style="background:${gc}22;color:${gc};">${v.grade}</div>
+      </div>
+      <div class="cmp-row"><span class="l">Veredicto</span><span class="v" style="color:${gc};">${v.title}</span></div>
+      <div class="cmp-row"><span class="l">Puntaje compuesto</span><span class="v">${fmt(v.composite,0)}/100</span></div>
+      <div class="cmp-row"><span class="l">Riesgo medido</span><span class="v" style="color:${v.riskScore<35?'var(--green)':v.riskScore<60?'var(--amber)':'var(--red)'};">${fmt(v.riskScore,0)}/100</span></div>
+      <div class="cmp-row"><span class="l">Retorno esperado</span><span class="v ${mc.expRet>=0?'g':'r'}">${mc.expRet>=0?'+':''}${fmt(mc.expRet,1)}%</span></div>
+      <div class="cmp-row"><span class="l">Prob. de pérdida</span><span class="v">${fmt(mc.probLoss,0)}%</span></div>
+      <div class="cmp-row"><span class="l">VaR 95%</span><span class="v r">${fmt(mc.var95Ret,1)}%</span></div>
+      ${isWin?'<div class="cmp-badge">★ Mejor perfil riesgo-retorno</div>':''}
+    </div>`;
+  };
+  $('compare-info').innerHTML = `Resultado de la comparación. El activo destacado tiene el mejor balance entre rentabilidad esperada y riesgo, según el puntaje compuesto.`;
+  $('compare-grid').innerHTML = col(A, aWin) + col(B, !aWin);
+}
+
+// ───────────────────────────────────────────────
+// HOOKS: guardar datos originales al analizar y refrescar historial
+// ───────────────────────────────────────────────
+const _origRunAnalysis = runAnalysis;
+runAnalysis = function(){
+  const { data, missing } = collectData();
+  if(missing.length){
+    toast('Faltan campos obligatorios: '+missing.slice(0,2).join(', ')+(missing.length>2?'…':''),'err');
+    return;
+  }
+  const result = ANALYZERS[currentMarket](data);
+  const mcRes = runMonteCarlo(result.mc);
+  const verdict = computeVerdict(result, mcRes);
+  const stress = buildStress(result, mcRes, data);
+  lastResult = { data, result, mcRes, verdict, stress, market:currentMarket, originalData:Object.assign({},data) };
+  scenarioState = { retShift:0, volMult:1, horizonMult:1 };
+  liveActive = false; $('live-panel').classList.add('hidden'); $('btn-live').classList.remove('btn-primary');
+  renderResults();
+  show('page-results');
+  setStep(3);
+};
+
+// Extender renderResults para incluir escenarios
+const _origRenderResults = renderResults;
+renderResults = function(){
+  _origRenderResults();
+  if($('scenario-controls')) renderScenarios();
+};
+
+// Al volver al inicio, refrescar historial
+const _origGoToMarket = goToMarket;
+goToMarket = function(){ _origGoToMarket(); renderHistory(); };
+
+// Init historial al cargar
+renderHistory();
+
+</script></body></html>
